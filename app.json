@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "biit-social-app-mobile-ts",
-    "slug": "biit-social-app-mobile-ts",
+    "name": "biit-social-app-mobile",
+    "slug": "biit-social-app-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
