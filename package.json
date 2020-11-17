@@ -22,11 +22,14 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json}\""
   },
   "dependencies": {
+    "@apollo/client": "^3.2.5",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.1",
     "@react-navigation/native": "^5.8.9",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
+    "graphql": "^15.4.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",

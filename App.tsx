@@ -1,52 +1,34 @@
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { AntDesign } from '@expo/vector-icons'
-import Home from './screens/Home'
-import Settings from './screens/Settings'
+import React, { useState, useEffect } from 'react'
+import { StatusBar } from 'expo-status-bar'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import BottomNavigation from './src/components/BottomNavigation'
+import SignInScreen from './src/screens/SignInScreen'
+import Loading from './src/components/Loading'
 
-const Tab = createBottomTabNavigator()
+const client = new ApolloClient({
+  uri: 'http://biit-social-app-api.herokuapp.com/graphql',
+  cache: new InMemoryCache(),
+})
 
 const App = (): JSX.Element => {
+  const [loading, setLoading] = useState(true)
+  const [loggedIn, setLoggedIn] = useState(false)
+
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(token => {
+      setLoading(false)
+      if (token) setLoggedIn(true)
+    })
+  })
+
+  if (loading) return <Loading />
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}
-      >
-        <Tab.Screen
-          name="Homea"
-          component={Home}
-          options={{
-            title: 'Home',
-            tabBarBadge: 2,
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="home" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={Settings}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="profile" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="setting" size={size} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <StatusBar style="auto" />
+      {loggedIn ? <BottomNavigation /> : <SignInScreen />}
+    </ApolloProvider>
   )
 }
 
