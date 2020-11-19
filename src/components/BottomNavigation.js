@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign } from '@expo/vector-icons'
 import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
-import SigninScreen from '../screens/SigninScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -32,15 +31,6 @@ const BottomNavigation = () => (
         options={{
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="setting" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Logout"
-        component={SigninScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="logout" size={size} color={color} />
           ),
         }}
       />

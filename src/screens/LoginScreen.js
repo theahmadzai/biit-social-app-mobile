@@ -10,7 +10,7 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
 
-const SigninScreen = () => {
+const LoginScreen = () => {
   const [username, onChangeUsername] = useState('2017-ARID-0264')
   const [password, onChangePassword] = useState('123')
 
@@ -39,7 +39,11 @@ const SigninScreen = () => {
           onChangeText={onChangePassword}
         />
 
-        <Button color="teal" title="Login" onPress={login} />
+        <Button
+          color="teal"
+          title="Login"
+          onPress={() => login(username, password)}
+        />
       </View>
     </SafeAreaView>
   )
@@ -70,4 +74,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SigninScreen
+export default LoginScreen
