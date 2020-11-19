@@ -7,37 +7,16 @@ import {
   TextInput,
   Button,
 } from 'react-native'
-import { gql, useMutation } from '@apollo/client'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
 
-const LOGIN_USER = gql`
-  mutation LoginUser($credentials: AuthInput!) {
-    login(input: $credentials) {
-      token
-      user {
-        id
-        name
-        email
-      }
-    }
-  }
-`
-
-const SignInScreen = (): JSX.Element => {
+const SigninScreen = () => {
   const [username, onChangeUsername] = useState('2017-ARID-0264')
   const [password, onChangePassword] = useState('123')
-  const [login, { loading }] = useMutation(LOGIN_USER, {
-    onCompleted: async ({ login }) => {
-      await AsyncStorage.setItem('token', login.token)
-    },
-  })
+
+  const { loading, login } = useAuth()
 
   if (loading) return <Loading />
-
-  const loginUser = () => {
-    login({ variables: { credentials: { username, password } } })
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,7 +39,7 @@ const SignInScreen = (): JSX.Element => {
           onChangeText={onChangePassword}
         />
 
-        <Button color="teal" title="Login" onPress={loginUser} />
+        <Button color="teal" title="Login" onPress={login} />
       </View>
     </SafeAreaView>
   )
@@ -91,4 +70,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default SignInScreen
+export default SigninScreen

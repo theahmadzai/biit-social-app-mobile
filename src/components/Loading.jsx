@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const Loading = (): JSX.Element => (
+const Loading = () => (
   <View style={styles.container}>
     <ActivityIndicator size="large" color="teal" />
   </View>

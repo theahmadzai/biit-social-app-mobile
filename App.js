@@ -5,13 +5,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import BottomNavigation from './src/components/BottomNavigation'
 import SignInScreen from './src/screens/SignInScreen'
 import Loading from './src/components/Loading'
+import { AuthProvider } from './src/contexts/AuthContext'
 
 const client = new ApolloClient({
   uri: 'http://biit-social-app-api.herokuapp.com/graphql',
   cache: new InMemoryCache(),
 })
 
-const App = (): JSX.Element => {
+const App = () => {
   const [loading, setLoading] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
 
@@ -26,8 +27,10 @@ const App = (): JSX.Element => {
 
   return (
     <ApolloProvider client={client}>
-      <StatusBar style="auto" />
-      {loggedIn ? <BottomNavigation /> : <SignInScreen />}
+      <AuthProvider>
+        <StatusBar style="auto" />
+        {loggedIn ? <BottomNavigation /> : <SignInScreen />}
+      </AuthProvider>
     </ApolloProvider>
   )
 }

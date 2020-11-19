@@ -2,13 +2,13 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { AntDesign } from '@expo/vector-icons'
-import HomeScreen from './../screens/HomeScreen'
-import SettingsScreen from './../screens/SettingsScreen'
-import SignInScreen from './../screens/SignInScreen'
+import HomeScreen from '../screens/HomeScreen'
+import SettingsScreen from '../screens/SettingsScreen'
+import SigninScreen from '../screens/SigninScreen'
 
 const Tab = createBottomTabNavigator()
 
-const BottomNavigation = (): JSX.Element => (
+const BottomNavigation = () => (
   <NavigationContainer>
     <Tab.Navigator
       tabBarOptions={{
@@ -37,7 +37,7 @@ const BottomNavigation = (): JSX.Element => (
       />
       <Tab.Screen
         name="Logout"
-        component={SignInScreen}
+        component={SigninScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="logout" size={size} color={color} />

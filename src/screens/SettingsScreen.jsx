@@ -1,8 +1,8 @@
 import React from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { View, Text, Button } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const SettingsScreen = (): JSX.Element => {
+const SettingsScreen = () => {
   const logout = async () => {
     await AsyncStorage.removeItem('token')
   }

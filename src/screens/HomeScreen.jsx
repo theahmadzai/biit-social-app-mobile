@@ -3,27 +3,13 @@ import { StyleSheet, View, Text, FlatList } from 'react-native'
 import { gql, useQuery } from '@apollo/client'
 import Loading from '../components/Loading'
 
-interface Course {
-  code: string
-  title: string
-}
-
-const styles = StyleSheet.create({
-  list: {
-    padding: 20,
-  },
-  item: {
-    marginBottom: 20,
-  },
-})
-
-const ListItem = ({ title }: Course): JSX.Element => (
+const ListItem = ({ title }) => (
   <View style={styles.item}>
     <Text>{title}</Text>
   </View>
 )
 
-const HomeScreen = (): JSX.Element => {
+const HomeScreen = () => {
   const { data, loading } = useQuery(gql`
     query {
       courses {
@@ -39,10 +25,19 @@ const HomeScreen = (): JSX.Element => {
     <FlatList
       style={styles.list}
       data={data.courses}
-      keyExtractor={({ code }: Course) => code}
+      keyExtractor={({ code }) => code}
       renderItem={({ item }) => <ListItem {...item} />}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  list: {
+    padding: 20,
+  },
+  item: {
+    marginBottom: 20,
+  },
+})
 
 export default HomeScreen
