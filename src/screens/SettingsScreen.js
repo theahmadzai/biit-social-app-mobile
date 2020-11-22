@@ -9,8 +9,10 @@ const SettingsScreen = () => {
     <View>
       <Text>Settings</Text>
       <Text>Token: {token}</Text>
-      <Text>ID: {user.id}</Text>
-      <Text>Name: {user.name}</Text>
+      <Text>Username: {user.username}</Text>
+      <Text>
+        Name: {user.firstName} {user.lastName}
+      </Text>
       <Text>Email: {user.email}</Text>
       <Button color="teal" title="logout" onPress={logout} />
     </View>

@@ -1,9 +1,10 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, Entypo, Octicons } from '@expo/vector-icons'
 import HomeScreen from '../screens/HomeScreen'
 import SettingsScreen from '../screens/SettingsScreen'
+import PostScreen from '../screens/PostScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -26,12 +27,17 @@ const BottomNavigation = () => (
         }}
       />
       <Tab.Screen
+        name="Post"
+        component={PostScreen}
+        options={{
+          tabBarIcon: props => <Entypo name="new-message" {...props} />,
+        }}
+      />
+      <Tab.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="setting" size={size} color={color} />
-          ),
+          tabBarIcon: props => <Octicons name="settings" {...props} />,
         }}
       />
     </Tab.Navigator>

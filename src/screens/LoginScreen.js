@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
-  TextInput,
-  Button,
-} from 'react-native'
+import { StyleSheet, View, Text, Image, TextInput, Button } from 'react-native'
 import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
 
@@ -19,10 +12,12 @@ const LoginScreen = () => {
   if (loading) return <Loading />
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.heading}>Sign In</Text>
       </View>
+
+      <Image style={styles.image} source={require('../../assets/signin.png')} />
 
       <View style={styles.form}>
         <TextInput
@@ -37,6 +32,7 @@ const LoginScreen = () => {
           placeholder="Password"
           value={password}
           onChangeText={onChangePassword}
+          secureTextEntry={true}
         />
 
         <Button
@@ -45,7 +41,7 @@ const LoginScreen = () => {
           onPress={() => login(username, password)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -63,6 +59,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'white',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    alignSelf: 'center',
   },
   form: {
     padding: 10,
