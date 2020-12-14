@@ -2,37 +2,25 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const USER_FRAGMENT = gql`
-  fragment UserFields on User {
-    username
-    firstName
-    middleName
-    lastName
-    email
-  }
-`
-
 const LOGIN_USER = gql`
   mutation LoginUser($credentials: AuthInput!) {
     login(input: $credentials) {
       token
       user {
-        ...UserFields
+        id
+        username
+        role
       }
     }
   }
-
-  ${USER_FRAGMENT}
 `
 
 const initialState = {
   token: null,
   user: {
+    id: null,
     username: null,
-    firstName: null,
-    middleName: null,
-    lastName: null,
-    email: null,
+    role: null,
   },
 }
 
@@ -45,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(initialState.user)
 
-  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+  const [loginUser, { loading: loginLoading }] = useMutation(LOGIN_USER, {
     onCompleted: ({ login }) => {
       AsyncStorage.setItem('token', login.token).then(() => {
         setToken(login.token)
@@ -76,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, isLoggedIn, login, logout, loading }}
+      value={{ token, user, isLoggedIn, login, logout, loginLoading }}
     >
       {children}
     </AuthContext.Provider>

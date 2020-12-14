@@ -1,12 +1,15 @@
 import React from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import BottomNavigation from '../components/BottomNavigation'
+import BottomTabNavigator from '../components/BottomTabNavigator'
 import LoginScreen from './LoginScreen'
+import Loading from '../components/Loading'
 
 const InitialScreen = () => {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, loginLoading } = useAuth()
 
-  return isLoggedIn ? <BottomNavigation /> : <LoginScreen />
+  if (loginLoading) return <Loading />
+
+  return isLoggedIn ? <BottomTabNavigator /> : <LoginScreen />
 }
 
 export default InitialScreen

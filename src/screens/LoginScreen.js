@@ -4,12 +4,12 @@ import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
 
 const LoginScreen = () => {
-  const [username, onChangeUsername] = useState('2017-ARID-0264')
+  const [username, onChangeUsername] = useState('Rosemary_Bosco57')
   const [password, onChangePassword] = useState('123')
 
-  const { loading, login } = useAuth()
+  const { loginLoading, login } = useAuth()
 
-  if (loading) return <Loading />
+  if (loginLoading) return <Loading />
 
   return (
     <View style={styles.container}>
