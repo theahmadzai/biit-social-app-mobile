@@ -3,10 +3,11 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { Text, View, TouchableOpacity } from 'react-native'
 import { Avatar, Menu, Divider } from 'react-native-paper'
 import { Fontisto } from '@expo/vector-icons'
-import GroupsScreen from '../../screens/Group/GroupsScreen'
-import GroupScreen from '../../screens/Group/GroupScreen'
-import MembersScreen from '../../screens/Group/MembersScreen'
-import CreatePostScreen from '../../screens/CreatePostScreen'
+import GroupsScreen from '../../screens/Groups/GroupsScreen'
+import PostsScreen from '../../screens/Groups/PostsScreen'
+import MembersScreen from '../../screens/Groups/MembersScreen'
+import CommentsScreen from '../../screens/Groups/CommentsScreen'
+import CreatePostScreen from '../../screens/Groups/CreatePostScreen'
 import { APP_URL } from '../../constants'
 
 const Stack = createStackNavigator()
@@ -22,9 +23,10 @@ const GroupsStack = () => {
     <Stack.Navigator>
       <Stack.Screen name="Groups" component={GroupsScreen} />
       <Stack.Screen name="Members" component={MembersScreen} />
+      <Stack.Screen name="Comments" component={CommentsScreen} />
       <Stack.Screen
-        name="Group"
-        component={GroupScreen}
+        name="Posts"
+        component={PostsScreen}
         options={({ navigation, route }) => ({
           headerTitle: (
             <View
@@ -71,7 +73,7 @@ const GroupsStack = () => {
           ),
         })}
       />
-      <Stack.Screen name="Post" component={CreatePostScreen} />
+      <Stack.Screen name="CreatePost" component={CreatePostScreen} />
     </Stack.Navigator>
   )
 }

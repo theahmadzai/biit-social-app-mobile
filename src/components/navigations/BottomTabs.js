@@ -4,7 +4,7 @@ import { AntDesign, MaterialIcons, Octicons } from '@expo/vector-icons'
 import HomeStack from './HomeStack'
 import GroupsStack from './GroupsStack'
 import ProfileStack from './UserStack'
-import NotificationsScreen from '../../screens/NotificationsScreen'
+import NotificationsStack from './NotificationsStack'
 
 const Tab = createBottomTabNavigator()
 
@@ -41,7 +41,7 @@ const BottomTabs = () => {
       />
       <Tab.Screen
         name="Notifications"
-        component={NotificationsScreen}
+        component={NotificationsStack}
         options={{
           tabBarBadge: 2,
           tabBarIcon: props => <AntDesign name="bells" {...props} />,

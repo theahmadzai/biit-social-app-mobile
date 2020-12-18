@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { gql, useMutation } from '@apollo/client'
 import * as ImagePicker from 'expo-image-picker'
-import Loading from '../components/Loading'
+import Loading from '../../components/Loading'
 
 const CreatePostScreen = ({ route }) => {
   const { groupId } = route.params

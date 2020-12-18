@@ -5,24 +5,22 @@ import { gql, useQuery } from '@apollo/client'
 import Loading from '../../components/Loading'
 import { APP_URL } from '../../constants'
 
+const GROUP_MEMBERS_QUERY = gql`
+  query GetGroupMembers($id: ID!) {
+    getGroupMembers(id: $id) {
+      id
+      username
+      image
+    }
+  }
+`
+
 const MembersScreen = ({ route }) => {
   const { groupId: id } = route.params
 
-  const { data, loading, error } = useQuery(
-    gql`
-      query GetGroupPosts($id: ID!) {
-        group(id: $id) {
-          id
-          members {
-            id
-            username
-            image
-          }
-        }
-      }
-    `,
-    { variables: { id } }
-  )
+  const { data, loading, error } = useQuery(GROUP_MEMBERS_QUERY, {
+    variables: { id },
+  })
 
   if (loading) return <Loading />
   if (error)
@@ -34,7 +32,7 @@ const MembersScreen = ({ route }) => {
 
   return (
     <FlatList
-      data={data.group.members}
+      data={data.getGroupMembers}
       keyExtractor={({ id }) => id}
       renderItem={({ item }) => (
         <List.Item
