@@ -1,19 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import React, { createContext, useContext, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const LOGIN_USER = gql`
-  mutation LoginUser($credentials: AuthInput!) {
-    login(input: $credentials) {
-      token
-      user {
-        id
-        username
-        role
-      }
-    }
-  }
-`
 
 const initialState = {
   token: null,
@@ -21,6 +7,7 @@ const initialState = {
     id: null,
     username: null,
     role: null,
+    image: null,
   },
 }
 
@@ -33,27 +20,12 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(initialState.user)
 
-  const [loginUser, { loading: loginLoading }] = useMutation(LOGIN_USER, {
-    onCompleted: ({ login }) => {
-      AsyncStorage.setItem('token', login.token).then(() => {
-        setToken(login.token)
-        setIsLoggedIn(true)
-        setUser(login.user)
-      })
-    },
-  })
-
-  useEffect(() => {
-    AsyncStorage.getItem('token').then(token => {
-      if (token) {
-        setToken(token)
-        setIsLoggedIn(true)
-      }
+  const login = ({ token, user }) => {
+    AsyncStorage.setItem('token', token).then(() => {
+      setToken(token)
+      setIsLoggedIn(true)
+      setUser(user)
     })
-  }, [])
-
-  const login = (username, password) => {
-    loginUser({ variables: { credentials: { username, password } } })
   }
 
   const logout = () => {
@@ -64,7 +36,16 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, isLoggedIn, login, logout, loginLoading }}
+      value={{
+        token,
+        setToken,
+        user,
+        setUser,
+        isLoggedIn,
+        setIsLoggedIn,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

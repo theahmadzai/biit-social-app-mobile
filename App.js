@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 import {
@@ -14,7 +15,7 @@ import { AuthProvider } from './src/contexts/AuthContext'
 import InitialScreen from './src/screens/InitialScreen'
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'http://192.168.1.2:3000/graphql',
 })
 
 const authLink = setContext(async (_, { headers }) => {
@@ -23,7 +24,7 @@ const authLink = setContext(async (_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: token ? `Bearer ${token}` : null,
     },
   }
 })

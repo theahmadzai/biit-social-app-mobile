@@ -1,12 +1,12 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 
-const HomeScreen = () => {
+const Members = () => {
   return (
     <View>
-      <Text>Home Page</Text>
+      <Text>Members List</Text>
     </View>
   )
 }
 
-export default HomeScreen
+export default Members

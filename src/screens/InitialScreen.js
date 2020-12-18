@@ -1,15 +1,41 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { gql, useQuery } from '@apollo/client'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../contexts/AuthContext'
-import BottomTabNavigator from '../components/BottomTabNavigator'
-import LoginScreen from './LoginScreen'
-import Loading from '../components/Loading'
+import BottomTabs from '../components/navigations/BottomTabs'
+import AuthStack from '../components/navigations/AuthStack'
+import SplashScreen from './SplashScreen'
 
 const InitialScreen = () => {
-  const { isLoggedIn, loginLoading } = useAuth()
+  const { isLoggedIn, setIsLoggedIn, setToken, setUser } = useAuth()
 
-  if (loginLoading) return <Loading />
+  const { data, loading } = useQuery(gql`
+    query {
+      whoami {
+        id
+        username
+        role
+        image
+      }
+    }
+  `)
 
-  return isLoggedIn ? <BottomTabNavigator /> : <LoginScreen />
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(token => {
+      if (token) {
+        setToken(token)
+        setIsLoggedIn(true)
+      }
+    })
+  }, [setToken, setIsLoggedIn])
+
+  useEffect(() => {
+    if (!loading && data) setUser(data.whoami)
+  }, [loading, data, setUser])
+
+  if (loading) return <SplashScreen />
+
+  return isLoggedIn ? <BottomTabs /> : <AuthStack />
 }
 
 export default InitialScreen

@@ -1,23 +1,57 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Text, Image, TextInput, Button } from 'react-native'
-import { useAuth } from '../contexts/AuthContext'
-import Loading from '../components/Loading'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TextInput,
+  Button,
+  Alert,
+} from 'react-native'
+import { gql, useMutation } from '@apollo/client'
+import { useAuth } from '../../contexts/AuthContext'
+import Loading from '../../components/Loading'
 
 const LoginScreen = () => {
-  const [username, onChangeUsername] = useState('Rosemary_Bosco57')
+  const [username, onChangeUsername] = useState('Davon.McKenzie69')
   const [password, onChangePassword] = useState('123')
 
-  const { loginLoading, login } = useAuth()
+  const { login: loginUser } = useAuth()
 
-  if (loginLoading) return <Loading />
+  const [login, { loading }] = useMutation(
+    gql`
+      mutation LoginUser($credentials: AuthInput!) {
+        login(input: $credentials) {
+          token
+          user {
+            id
+            username
+            role
+            image
+          }
+        }
+      }
+    `,
+    {
+      onCompleted: ({ login }) => loginUser(login),
+      onError: err => {
+        Alert.alert(err.name, err.message)
+      },
+    }
+  )
+
+  if (loading) return <Loading />
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.heading}>Sign In</Text>
+        <Text style={styles.heading}>BIIT SOCIAL APP</Text>
       </View>
 
-      <Image style={styles.image} source={require('../../assets/signin.png')} />
+      <Image
+        style={styles.image}
+        source={require('../../../assets/signin.png')}
+      />
 
       <View style={styles.form}>
         <TextInput
@@ -38,7 +72,9 @@ const LoginScreen = () => {
         <Button
           color="teal"
           title="Login"
-          onPress={() => login(username, password)}
+          onPress={() =>
+            login({ variables: { credentials: { username, password } } })
+          }
         />
       </View>
     </View>
