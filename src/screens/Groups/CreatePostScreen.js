@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import {
   StyleSheet,
   View,
-  Text,
   Button,
   Image,
   TextInput,
@@ -14,7 +13,6 @@ import Loading from '../../components/Loading'
 
 const CreatePostScreen = ({ route }) => {
   const { groupId } = route.params
-  const [title, onTitleChange] = useState('')
   const [text, onTextChange] = useState('')
   const [image, onImagePick] = useState(null)
 
@@ -64,7 +62,6 @@ const CreatePostScreen = ({ route }) => {
     createPost({
       variables: {
         input: {
-          title,
           text,
           media: image,
           group: groupId,
@@ -75,13 +72,6 @@ const CreatePostScreen = ({ route }) => {
 
   return (
     <View>
-      <Text>Post Screen {groupId}</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Post title..."
-        value={title}
-        onChangeText={onTitleChange}
-      />
       <TextInput
         style={styles.textInput}
         placeholder="Description..."

@@ -9,6 +9,7 @@ const initialState = {
     role: null,
     image: null,
   },
+  isLoggedIn: false,
 }
 
 const AuthContext = createContext(initialState)
@@ -16,21 +17,27 @@ const AuthContext = createContext(initialState)
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(initialState.token)
   const [user, setUser] = useState(initialState.user)
+  const [isLoggedIn, setIsLoggedIn] = useState(initialState.isLoggedIn)
 
   const login = ({ token, user }) => {
     AsyncStorage.setItem('token', token).then(() => {
       setToken(token)
-      setIsLoggedIn(true)
+    })
+    AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
       setUser(user)
+      setIsLoggedIn(true)
     })
   }
 
   const logout = () => {
     AsyncStorage.removeItem('token').then(() => {
-      setIsLoggedIn(false)
+      setToken(initialState.token)
+    })
+    AsyncStorage.removeItem('user').then(() => {
+      setUser(initialState.user)
+      setIsLoggedIn(initialState.isLoggedIn)
     })
   }
 

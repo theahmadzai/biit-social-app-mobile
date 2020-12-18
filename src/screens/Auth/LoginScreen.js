@@ -13,7 +13,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import Loading from '../../components/Loading'
 
 const LoginScreen = () => {
-  const [username, onChangeUsername] = useState('Davon.McKenzie69')
+  const [username, onChangeUsername] = useState('Kamryn.Gutmann8')
   const [password, onChangePassword] = useState('123')
 
   const { login: loginUser } = useAuth()
