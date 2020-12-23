@@ -3,34 +3,39 @@ import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 import {
   ApolloClient,
-  createHttpLink,
   InMemoryCache,
   ApolloProvider,
+  ApolloLink,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { createUploadLink } from 'apollo-upload-client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Provider as PaperProvider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { AuthProvider } from './src/contexts/AuthContext'
 import InitialScreen from './src/screens/InitialScreen'
 
-const httpLink = createHttpLink({
-  uri: 'http://192.168.1.2:3000/graphql',
-})
-
-const authLink = setContext(async (_, { headers }) => {
-  const token = await AsyncStorage.getItem('token')
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : null,
-    },
-  }
-})
+const API_URL = 'http://192.168.1.2:3000/graphql'
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: ApolloLink.from([
+    setContext(async (_, { headers }) => {
+      let auth = await AsyncStorage.getItem('auth')
+      let token = null
+
+      if (auth && 'token' in JSON.parse(auth)) {
+        token = auth.token
+      }
+
+      return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : null,
+        },
+      }
+    }),
+    createUploadLink({ uri: API_URL }),
+  ]),
   cache: new InMemoryCache(),
 })
 
