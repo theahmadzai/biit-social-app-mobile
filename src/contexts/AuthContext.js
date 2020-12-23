@@ -1,5 +1,21 @@
 import React, { createContext, useContext, useState } from 'react'
+import { Alert } from 'react-native'
+import { gql, useMutation } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const LOGIN_MUTATION = gql`
+  mutation LoginUser($credentials: AuthInput!) {
+    login(input: $credentials) {
+      token
+      user {
+        id
+        username
+        role
+        image
+      }
+    }
+  }
+`
 
 const initialState = {
   token: null,
@@ -17,40 +33,38 @@ const AuthContext = createContext(initialState)
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(initialState.token)
-  const [user, setUser] = useState(initialState.user)
-  const [isLoggedIn, setIsLoggedIn] = useState(initialState.isLoggedIn)
+  const [auth, setAuth] = useState(initialState)
+  const [loginLoading, setLoginLoading] = useState(false)
 
-  const login = ({ token, user }) => {
-    AsyncStorage.setItem('token', token).then(() => {
-      setToken(token)
-    })
-    AsyncStorage.setItem('user', JSON.stringify(user)).then(() => {
-      setUser(user)
-      setIsLoggedIn(true)
-    })
+  const [loginUser] = useMutation(LOGIN_MUTATION, {
+    onCompleted: async ({ login: { token, user } }) => {
+      const auth = { token, user, isLoggedIn: true }
+      await AsyncStorage.setItem('auth', JSON.stringify(auth))
+      setAuth(auth)
+      setLoginLoading(false)
+    },
+    onError: err => {
+      Alert.alert(err.name, err.message)
+    },
+  })
+
+  const login = (username, password) => {
+    setLoginLoading(true)
+    loginUser({ variables: { credentials: { username, password } } })
   }
 
-  const logout = () => {
-    AsyncStorage.removeItem('token').then(() => {
-      setToken(initialState.token)
-    })
-    AsyncStorage.removeItem('user').then(() => {
-      setUser(initialState.user)
-      setIsLoggedIn(initialState.isLoggedIn)
-    })
+  const logout = async () => {
+    await AsyncStorage.removeItem('auth')
+    setAuth(initialState)
   }
 
   return (
     <AuthContext.Provider
       value={{
-        token,
-        setToken,
-        user,
-        setUser,
-        isLoggedIn,
-        setIsLoggedIn,
+        ...auth,
+        setAuth,
         login,
+        loginLoading,
         logout,
       }}
     >
