@@ -7,23 +7,18 @@ import SplashScreen from './SplashScreen'
 
 const InitialScreen = () => {
   const [loading, setLoading] = useState(true)
-  const { isLoggedIn, setIsLoggedIn, setToken, setUser } = useAuth()
+  const { isLoggedIn, setAuth } = useAuth()
 
   useEffect(() => {
-    AsyncStorage.getItem('token')
-      .then(token => {
-        if (token) {
-          setToken(token)
-          AsyncStorage.getItem('user').then(user => {
-            if (user) {
-              setUser(JSON.parse(user))
-              setIsLoggedIn(true)
-            }
-          })
+    AsyncStorage.getItem('auth')
+      .then(state => {
+        if (state) {
+          setAuth(JSON.parse(state))
         }
       })
       .then(() => setLoading(false))
-  }, [setToken, setUser, setIsLoggedIn])
+    return () => setAuth({})
+  }, [setAuth])
 
   if (loading) return <SplashScreen />
 
