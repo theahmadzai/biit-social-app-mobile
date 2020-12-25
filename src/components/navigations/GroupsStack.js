@@ -7,7 +7,6 @@ import GroupsScreen from '../../screens/Groups/GroupsScreen'
 import PostsScreen from '../../screens/Groups/PostsScreen'
 import MembersScreen from '../../screens/Groups/MembersScreen'
 import CommentsScreen from '../../screens/Groups/CommentsScreen'
-import CreatePostScreen from '../../screens/Groups/CreatePostScreen'
 import ProfileScreen from '../../screens/User/ProfileScreen'
 import { APP_URL } from '../../constants'
 
@@ -75,7 +74,6 @@ const GroupsStack = () => {
         })}
       />
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="CreatePost" component={CreatePostScreen} />
     </Stack.Navigator>
   )
 }
