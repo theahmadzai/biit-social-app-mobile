@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
   },
 })
 
-const Loading = () => (
-  <View style={styles.container}>
+const Loading = props => (
+  <View style={styles.container} {...props}>
     <ActivityIndicator size="large" color="teal" />
   </View>
 )
