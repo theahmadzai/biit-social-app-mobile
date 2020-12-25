@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, View, Text } from 'react-native'
+import { FlatList, Alert } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import Loading from '../../components/Loading'
@@ -15,12 +15,13 @@ const POST_COMMENTS_QUERY = gql`
         username
         image
       }
+      createdAt
     }
   }
 `
 
 const CREATE_COMMENT_MUTATION = gql`
-  mutation createComment($input: CommentInput!) {
+  mutation CreateComment($input: CommentInput!) {
     createComment(input: $input) {
       id
       content
@@ -34,15 +35,18 @@ const CREATE_COMMENT_MUTATION = gql`
 `
 
 const CommentsScreen = ({ route }) => {
-  const { postId: id } = route.params
+  const { postId } = route.params
 
   const [comment, onCommentChange] = useState('')
 
-  const { data, loading, error } = useQuery(POST_COMMENTS_QUERY, {
-    variables: { id },
-  })
+  const { data, loading, refetch, networkStatus } = useQuery(
+    POST_COMMENTS_QUERY,
+    {
+      variables: { id: postId },
+    }
+  )
 
-  const [createComment, { loadingComment }] = useMutation(
+  const [createComment, { loading: creatingComment, error }] = useMutation(
     CREATE_COMMENT_MUTATION,
     {
       onCompleted() {
@@ -51,11 +55,12 @@ const CommentsScreen = ({ route }) => {
       update(cache, { data: { createComment } }) {
         const existingComments = cache.readQuery({
           query: POST_COMMENTS_QUERY,
-          variables: { id },
+          variables: { id: postId },
         })
+
         cache.writeQuery({
           query: POST_COMMENTS_QUERY,
-          variables: { id },
+          variables: { id: postId },
           data: {
             getPostComments: [
               ...existingComments.getPostComments,
@@ -67,41 +72,40 @@ const CommentsScreen = ({ route }) => {
     }
   )
 
-  if (loading) return <Loading />
-  if (error)
-    return (
-      <View>
-        <Text>`Error! ${error.message}`</Text>
-      </View>
-    )
+  const submitComment = () => {
+    createComment({
+      variables: {
+        input: { content: comment, postId },
+      },
+    })
+  }
 
-  return (
+  if (loading) return <Loading />
+  if (error) {
+    Alert.alert(error.name, error.message)
+  }
+
+  return creatingComment ? (
+    <Loading />
+  ) : (
     <FlatList
       ListHeaderComponent={
         <TextInput
           style={{ margin: 10 }}
-          disabled={loadingComment}
           mode="outlined"
-          label="Comment"
+          placeholder="Comment something..."
           value={comment}
           onChangeText={onCommentChange}
-          right={
-            <TextInput.Icon
-              name="send"
-              onPress={() => {
-                createComment({
-                  variables: {
-                    input: { content: comment, post: id },
-                  },
-                })
-              }}
-            />
-          }
+          multiline={true}
+          disabled={creatingComment}
+          right={<TextInput.Icon name="send" onPress={submitComment} />}
         />
       }
       data={data.getPostComments}
       keyExtractor={({ id }) => id}
       renderItem={({ item }) => <CommentPreview {...item} />}
+      onRefresh={refetch}
+      refreshing={networkStatus === 4}
     />
   )
 }

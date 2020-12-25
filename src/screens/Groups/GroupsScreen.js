@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, FlatList } from 'react-native'
+import { Alert, FlatList } from 'react-native'
 import { gql, useQuery } from '@apollo/client'
 import { useAuth } from '../../contexts/AuthContext'
 import GroupPreview from '../../components/GroupPreview'
@@ -16,30 +16,23 @@ const USER_GROUPS_QUERY = gql`
   }
 `
 
-const GroupsScreen = ({ navigation }) => {
-  const {
-    user: { id },
-  } = useAuth()
+const GroupsScreen = () => {
+  const { user } = useAuth()
 
-  const { loading, error, data } = useQuery(USER_GROUPS_QUERY, {
-    variables: { id },
+  const { data, loading, error } = useQuery(USER_GROUPS_QUERY, {
+    variables: { id: user.id },
   })
 
   if (loading) return <Loading />
-  if (error)
-    return (
-      <View>
-        <Text>`Error! ${error.message}`</Text>
-      </View>
-    )
+  if (error) {
+    Alert.alert(error.name, error.message)
+  }
 
   return (
     <FlatList
       data={data.getUserGroups}
-      keyExtractor={({ name }) => name}
-      renderItem={({ item }) => (
-        <GroupPreview navigation={navigation} {...item} />
-      )}
+      keyExtractor={({ id }) => id}
+      renderItem={({ item }) => <GroupPreview {...item} />}
     />
   )
 }

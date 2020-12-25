@@ -1,9 +1,8 @@
 import React from 'react'
-import { FlatList, View, Text } from 'react-native'
-import { List, Avatar } from 'react-native-paper'
+import { Alert, FlatList } from 'react-native'
 import { gql, useQuery } from '@apollo/client'
+import MemberPreview from '../../components/MemberPreview'
 import Loading from '../../components/Loading'
-import { APP_URL } from '../../constants'
 
 const GROUP_MEMBERS_QUERY = gql`
   query GetGroupMembers($id: ID!) {
@@ -16,33 +15,22 @@ const GROUP_MEMBERS_QUERY = gql`
 `
 
 const MembersScreen = ({ route }) => {
-  const { groupId: id } = route.params
+  const { groupId } = route.params
 
   const { data, loading, error } = useQuery(GROUP_MEMBERS_QUERY, {
-    variables: { id },
+    variables: { id: groupId },
   })
 
   if (loading) return <Loading />
-  if (error)
-    return (
-      <View>
-        <Text>`Error! ${error.message}`</Text>
-      </View>
-    )
+  if (error) {
+    Alert.alert(error.name, error.message)
+  }
 
   return (
     <FlatList
       data={data.getGroupMembers}
       keyExtractor={({ id }) => id}
-      renderItem={({ item }) => (
-        <List.Item
-          title={item.username}
-          left={props => (
-            <Avatar.Image {...props} source={{ uri: APP_URL + item.image }} />
-          )}
-          onPress={() => {}}
-        />
-      )}
+      renderItem={({ item }) => <MemberPreview {...item} />}
     />
   )
 }

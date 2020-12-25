@@ -10,8 +10,13 @@ import {
 import { useAuth } from '../../contexts/AuthContext'
 import { APP_URL } from '../../constants'
 
-const ProfileScreen = () => {
-  const { logout, user } = useAuth()
+const ProfileScreen = ({ route }) => {
+  const { user: u, logout } = useAuth()
+  let user = u
+
+  if (route.params && 'id' in route.params) {
+    Object.assign(user, route.params)
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -25,9 +30,11 @@ const ProfileScreen = () => {
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
             electram expetendis, omittam deseruisse consequuntur ius an,
           </Text>
-          <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
+          {route.params ? null : (
+            <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </ScrollView>
