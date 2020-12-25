@@ -23,8 +23,12 @@ const client = new ApolloClient({
       let auth = await AsyncStorage.getItem('auth')
       let token = null
 
-      if (auth && 'token' in JSON.parse(auth)) {
-        token = auth.token
+      if (auth) {
+        const authState = JSON.parse(auth)
+
+        if ('token' in authState) {
+          token = authState.token
+        }
       }
 
       return {
