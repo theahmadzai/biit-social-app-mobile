@@ -1,20 +1,21 @@
 import React from 'react'
 import { List, Avatar } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 import { APP_URL } from '../constants'
 
-const GroupPreview = ({ navigation, ...group }) => {
-  const { name, description, logo } = group
+const GroupPreview = group => {
+  const navigation = useNavigation()
 
   return (
     <List.Item
-      title={name}
-      description={description}
+      title={group.name}
+      description={group.description}
       descriptionNumberOfLines={1}
       left={props => (
-        <Avatar.Image {...props} source={{ uri: APP_URL + logo }} />
+        <Avatar.Image {...props} source={{ uri: APP_URL + group.logo }} />
       )}
       onPress={() => {
-        navigation.navigate('Posts', { ...group })
+        navigation.navigate('Posts', group)
       }}
     />
   )
