@@ -1,19 +1,21 @@
 import React from 'react'
-import { List, Avatar } from 'react-native-paper'
+import { Card, Avatar, Paragraph } from 'react-native-paper'
 import { APP_URL } from '../constants'
 
-const CommentPreview = ({ content, user }) => {
-  const { username, image } = user
-
+const CommentPreview = ({ content, user, createdAt }) => {
   return (
-    <List.Item
-      title={username}
-      description={content}
-      left={props => (
-        <Avatar.Image {...props} source={{ uri: APP_URL + image }} />
-      )}
-      onPress={() => {}}
-    />
+    <Card style={{ marginBottom: 10 }}>
+      <Card.Title
+        title={user.username}
+        subtitle={new Date(Number(createdAt)).toLocaleString()}
+        left={props => (
+          <Avatar.Image {...props} source={{ uri: APP_URL + user.image }} />
+        )}
+      />
+      <Card.Content>
+        <Paragraph>{content}</Paragraph>
+      </Card.Content>
+    </Card>
   )
 }
 
