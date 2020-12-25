@@ -1,10 +1,10 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Image } from 'react-native'
 
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>BIIT SOCIAL APP</Text>
+      <Image style={styles.image} source={require('../../assets/signin.png')} />
     </View>
   )
 }
@@ -16,12 +16,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'teal',
   },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-    fontFamily: 'monospace',
+  image: {
+    width: 200,
+    height: 200,
   },
 })
