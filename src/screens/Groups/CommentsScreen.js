@@ -14,6 +14,11 @@ const POST_COMMENTS_QUERY = gql`
         id
         username
         image
+        profile {
+          firstName
+          middleName
+          lastName
+        }
       }
       createdAt
     }
@@ -21,7 +26,7 @@ const POST_COMMENTS_QUERY = gql`
 `
 
 const CREATE_COMMENT_MUTATION = gql`
-  mutation CreateComment($input: CommentInput!) {
+  mutation CreateComment($input: CreateCommentInput!) {
     createComment(input: $input) {
       id
       content

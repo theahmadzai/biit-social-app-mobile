@@ -4,6 +4,7 @@ import { Avatar, Button, Card, Paragraph } from 'react-native-paper'
 import { AntDesign, Fontisto } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { APP_URL } from '../constants'
+import { profileName } from '../utils'
 
 const Media = ({ list }) => {
   if (!list.length) {
@@ -30,7 +31,7 @@ const PostPreview = ({ id, text, createdAt, media, user }) => {
   return (
     <Card style={{ marginBottom: 10 }}>
       <Card.Title
-        title={user.username}
+        title={profileName(user.profile)}
         subtitle={new Date(Number(createdAt)).toLocaleString()}
         left={props => (
           <Avatar.Image {...props} source={{ uri: APP_URL + user.image }} />

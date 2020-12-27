@@ -12,6 +12,11 @@ const LOGIN_MUTATION = gql`
         username
         role
         image
+        profile {
+          firstName
+          middleName
+          lastName
+        }
       }
     }
   }
@@ -24,6 +29,11 @@ const initialState = {
     username: null,
     role: null,
     image: null,
+    profile: {
+      firstName: null,
+      middleName: null,
+      lastName: null,
+    },
   },
   isLoggedIn: false,
 }
@@ -45,6 +55,7 @@ export const AuthProvider = ({ children }) => {
     },
     onError: err => {
       Alert.alert(err.name, err.message)
+      setLoginLoading(false)
     },
   })
 

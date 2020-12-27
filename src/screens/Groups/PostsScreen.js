@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import PostPreview from '../../components/PostPreview'
 import Loading from '../../components/Loading'
 import { APP_URL } from '../../constants'
+import { profileName } from '../../utils'
 
 const GROUP_POSTS_QUERY = gql`
   query GetGroupPosts($id: ID!) {
@@ -19,6 +20,11 @@ const GROUP_POSTS_QUERY = gql`
         id
         username
         image
+        profile {
+          firstName
+          middleName
+          lastName
+        }
       }
       media {
         id
@@ -30,7 +36,7 @@ const GROUP_POSTS_QUERY = gql`
 `
 
 const CREATE_POST_MUTATION = gql`
-  mutation CreatePost($input: PostInput!) {
+  mutation CreatePost($input: CreatePostInput!) {
     createPost(input: $input) {
       id
       text
@@ -102,7 +108,7 @@ const PostsScreen = ({ route }) => {
     }
   )
 
-  const pickImage = async () => {
+  const pickImageAction = async () => {
     const file = await ImagePicker.launchImageLibraryAsync({
       mediaType: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -115,7 +121,7 @@ const PostsScreen = ({ route }) => {
     }
   }
 
-  const submitPost = () => {
+  const createPostAction = () => {
     createPost({
       variables: {
         input: {
@@ -146,7 +152,7 @@ const PostsScreen = ({ route }) => {
       ListHeaderComponent={
         <Card style={{ marginBottom: 10 }}>
           <Card.Title
-            title={user.username}
+            title={profileName(user.profile)}
             left={props => (
               <Avatar.Image {...props} source={{ uri: APP_URL + user.image }} />
             )}
@@ -159,8 +165,8 @@ const PostsScreen = ({ route }) => {
               onChangeText={onTextChange}
               multiline={true}
               disabled={creatingPost}
-              left={<TextInput.Icon name="image" onPress={pickImage} />}
-              right={<TextInput.Icon name="send" onPress={submitPost} />}
+              left={<TextInput.Icon name="image" onPress={pickImageAction} />}
+              right={<TextInput.Icon name="send" onPress={createPostAction} />}
             />
             {files
               ? files.map(({ uri }, i) => (

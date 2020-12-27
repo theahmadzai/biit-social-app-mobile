@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Text, Image, TextInput, Button } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TextInput,
+  Button,
+  KeyboardAvoidingView,
+} from 'react-native'
 import { useAuth } from '../../contexts/AuthContext'
 import Loading from '../../components/Loading'
 
@@ -12,7 +20,7 @@ const LoginScreen = () => {
   if (loginLoading) return <Loading />
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="position">
       <View style={styles.header}>
         <Text style={styles.heading}>BIIT SOCIAL APP</Text>
       </View>
@@ -44,7 +52,7 @@ const LoginScreen = () => {
           onPress={() => login(username, password)}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 

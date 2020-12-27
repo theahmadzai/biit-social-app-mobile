@@ -12,7 +12,7 @@ const GroupPreview = group => {
       description={group.description}
       descriptionNumberOfLines={1}
       left={props => (
-        <Avatar.Image {...props} source={{ uri: APP_URL + group.logo }} />
+        <Avatar.Image {...props} source={{ uri: APP_URL + group.image }} />
       )}
       onPress={() => {
         navigation.navigate('Posts', group)

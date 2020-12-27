@@ -10,6 +10,11 @@ const GROUP_MEMBERS_QUERY = gql`
       id
       username
       image
+      profile {
+        firstName
+        middleName
+        lastName
+      }
     }
   }
 `
