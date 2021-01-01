@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Image } from 'react-native'
 import {
   Card,
@@ -25,7 +25,7 @@ const PostPreview = ({ post: { id, text, createdAt, media, user } }) => {
         <Left>
           <Thumbnail source={{ uri: APP_URL + user.image }} />
           <Body>
-            <Text>{profileName(user)}</Text>
+            <Text style={{ fontWeight: 'bold' }}>{profileName(user)}</Text>
             <Text note>{moment(+createdAt).fromNow()}</Text>
           </Body>
         </Left>
@@ -70,4 +70,4 @@ const PostPreview = ({ post: { id, text, createdAt, media, user } }) => {
   )
 }
 
-export default PostPreview
+export default memo(PostPreview)

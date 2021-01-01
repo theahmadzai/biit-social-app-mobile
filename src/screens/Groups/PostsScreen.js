@@ -117,7 +117,6 @@ const PostsScreen = ({ route }) => {
       const file = await ImagePicker.launchImageLibraryAsync({
         mediaType: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [4, 3],
         quality: 1,
       })
 

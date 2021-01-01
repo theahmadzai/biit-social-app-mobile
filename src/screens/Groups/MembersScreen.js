@@ -16,11 +16,6 @@ const GROUP_MEMBERS_QUERY = gql`
         firstName
         middleName
         lastName
-
-        ... on StudentProfile {
-          session
-          section
-        }
       }
     }
   }
