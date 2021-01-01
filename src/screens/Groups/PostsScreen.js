@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Platform, Image, FlatList, Alert } from 'react-native'
-import { Avatar, TextInput, Card } from 'react-native-paper'
+import React, { useEffect, useState, useMemo } from 'react'
+import { Platform, Alert, RefreshControl, Image, FlatList } from 'react-native'
+import { Container, Form, Item, Input, Icon, Thumbnail } from 'native-base'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import * as ImagePicker from 'expo-image-picker'
 import mime from 'react-native-mime-types'
@@ -9,13 +9,17 @@ import { useAuth } from '../../contexts/AuthContext'
 import PostPreview from '../../components/PostPreview'
 import Loading from '../../components/Loading'
 import { APP_URL } from '../../constants'
-import { profileName } from '../../utils'
 
 const GROUP_POSTS_QUERY = gql`
   query GetGroupPosts($id: ID!) {
     getGroupPosts(id: $id) {
       id
       text
+      createdAt
+      media {
+        id
+        filename
+      }
       user {
         id
         username
@@ -26,11 +30,6 @@ const GROUP_POSTS_QUERY = gql`
           lastName
         }
       }
-      media {
-        id
-        filename
-      }
-      createdAt
     }
   }
 `
@@ -40,22 +39,27 @@ const CREATE_POST_MUTATION = gql`
     createPost(input: $input) {
       id
       text
-      user {
-        id
-        username
-        image
-      }
+      createdAt
       media {
         id
         filename
       }
-      createdAt
+      user {
+        id
+        username
+        image
+        profile {
+          firstName
+          middleName
+          lastName
+        }
+      }
     }
   }
 `
 
 const PostsScreen = ({ route }) => {
-  const { id: groupId } = route.params
+  const { id: groupId } = route.params.group
 
   const [text, onTextChange] = useState('')
   const [files, setFiles] = useState([])
@@ -108,85 +112,99 @@ const PostsScreen = ({ route }) => {
     }
   )
 
-  const pickImageAction = async () => {
-    const file = await ImagePicker.launchImageLibraryAsync({
-      mediaType: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    })
+  const headerComponent = useMemo(() => {
+    const pickImageAction = async () => {
+      const file = await ImagePicker.launchImageLibraryAsync({
+        mediaType: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      })
 
-    if (!file.cancelled) {
-      setFiles([...files, file])
+      if (!file.cancelled) {
+        setFiles([...files, file])
+      }
     }
-  }
 
-  const createPostAction = () => {
-    createPost({
-      variables: {
-        input: {
-          text,
-          media: files.map(({ uri }, i) => {
-            const type = mime.lookup(uri) || 'image'
-            const name = `file-${i}.${mime.extension(type)}`
+    const createPostAction = () => {
+      createPost({
+        variables: {
+          input: {
+            text,
+            media: files.map(({ uri }, i) => {
+              const type = mime.lookup(uri) || 'image'
+              const name = `file-${i}.${mime.extension(type)}`
 
-            return new ReactNativeFile({
-              uri,
-              type,
-              name,
-            })
-          }),
-          groupId,
+              return new ReactNativeFile({
+                uri,
+                type,
+                name,
+              })
+            }),
+            groupId,
+          },
         },
-      },
-    })
-  }
+      })
+    }
 
-  if (loading) return <Loading />
+    return (
+      <Form style={{ padding: 10 }}>
+        <Item rounded>
+          <Thumbnail
+            style={{ marginLeft: 10 }}
+            small
+            source={{ uri: APP_URL + user.image }}
+          />
+          <Input
+            placeholder="Write something..."
+            value={text}
+            onChangeText={onTextChange}
+          />
+          <Icon name="image" onPress={pickImageAction} />
+          <Icon name="send" onPress={createPostAction} />
+        </Item>
+        <FlatList
+          horizontal
+          data={files}
+          keyExtractor={({ uri }) => uri}
+          renderItem={({ item: { uri } }) => (
+            <Image
+              source={{ uri }}
+              style={{
+                borderWidth: 1,
+                borderColor: '#999999',
+                height: 70,
+                width: 70,
+                marginTop: 10,
+                marginRight: 10,
+              }}
+            />
+          )}
+        />
+      </Form>
+    )
+  }, [createPost, groupId, files, text, user.image])
+
+  if (loading || creatingPost) return <Loading />
   if (error) {
     Alert.alert(error.name, error.message)
   }
 
   return (
-    <FlatList
-      ListHeaderComponent={
-        <Card style={{ marginBottom: 10 }}>
-          <Card.Title
-            title={profileName(user.profile)}
-            left={props => (
-              <Avatar.Image {...props} source={{ uri: APP_URL + user.image }} />
-            )}
+    <Container>
+      <FlatList
+        ListHeaderComponent={headerComponent}
+        data={data.getGroupPosts}
+        keyExtractor={({ id }) => id}
+        renderItem={({ item }) => <PostPreview post={item} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={refetch}
+            refreshing={networkStatus === 4}
           />
-          <Card.Content>
-            <TextInput
-              mode="outlined"
-              placeholder="Write something here..."
-              value={text}
-              onChangeText={onTextChange}
-              multiline={true}
-              disabled={creatingPost}
-              left={<TextInput.Icon name="image" onPress={pickImageAction} />}
-              right={<TextInput.Icon name="send" onPress={createPostAction} />}
-            />
-            {files
-              ? files.map(({ uri }, i) => (
-                  <Image
-                    key={i}
-                    source={{ uri }}
-                    style={{ width: 200, height: 200 }}
-                  />
-                ))
-              : null}
-            {creatingPost ? <Loading style={{ marginTop: 10 }} /> : null}
-          </Card.Content>
-        </Card>
-      }
-      data={data.getGroupPosts}
-      keyExtractor={({ id }) => id}
-      renderItem={({ item }) => <PostPreview {...item} />}
-      onRefresh={refetch}
-      refreshing={networkStatus === 4}
-    />
+        }
+      />
+    </Container>
   )
 }
 

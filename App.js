@@ -1,6 +1,8 @@
 import 'react-native-gesture-handler'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
+import { useFonts } from 'expo-font'
+import { Ionicons } from '@expo/vector-icons'
 import {
   ApolloClient,
   InMemoryCache,
@@ -14,6 +16,7 @@ import { Provider as PaperProvider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { AuthProvider } from './src/contexts/AuthContext'
 import InitialScreen from './src/screens/InitialScreen'
+import SplashScreen from './src/screens/SplashScreen'
 
 const API_URL = 'http://192.168.1.2:3000/graphql'
 
@@ -44,6 +47,14 @@ const client = new ApolloClient({
 })
 
 const App = () => {
+  const [loaded] = useFonts({
+    Roboto: require('native-base/Fonts/Roboto.ttf'),
+    Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+    ...Ionicons.font,
+  })
+
+  if (!loaded) return <SplashScreen />
+
   return (
     <ApolloProvider client={client}>
       <AuthProvider>

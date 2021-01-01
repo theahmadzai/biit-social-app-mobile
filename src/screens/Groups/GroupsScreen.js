@@ -1,8 +1,7 @@
 import React from 'react'
-import { StyleSheet, Alert, FlatList } from 'react-native'
-import { FAB } from 'react-native-paper'
+import { Alert, RefreshControl } from 'react-native'
+import { Container, List } from 'native-base'
 import { gql, useQuery } from '@apollo/client'
-import { useNavigation } from '@react-navigation/native'
 import { useAuth } from '../../contexts/AuthContext'
 import GroupPreview from '../../components/GroupPreview'
 import Loading from '../../components/Loading'
@@ -19,13 +18,14 @@ const USER_GROUPS_QUERY = gql`
 `
 
 const GroupsScreen = () => {
-  const navigation = useNavigation()
-
   const { user } = useAuth()
 
-  const { data, loading, error } = useQuery(USER_GROUPS_QUERY, {
-    variables: { id: user.id },
-  })
+  const { data, loading, error, refetch, networkStatus } = useQuery(
+    USER_GROUPS_QUERY,
+    {
+      variables: { id: user.id },
+    }
+  )
 
   if (loading) return <Loading />
   if (error) {
@@ -34,35 +34,21 @@ const GroupsScreen = () => {
 
   return (
     <>
-      <FAB
-        style={styles.fab}
-        small
-        icon="plus"
-        color="black"
-        onPress={() => console.log('abc')}
-        // onPress={() => {
-        //
-        //   navigation.navigate('CreateGroup')
-        // }}
-        // loading={true}
-      />
-      <FlatList
-        data={data.getUserGroups}
-        keyExtractor={({ id }) => id}
-        renderItem={({ item }) => <GroupPreview {...item} />}
-      />
+      <Container>
+        <List
+          dataArray={data.getUserGroups}
+          keyExtractor={({ id }) => id}
+          renderItem={({ item }) => <GroupPreview group={item} />}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={networkStatus === 4}
+            />
+          }
+        ></List>
+      </Container>
     </>
   )
 }
 
 export default GroupsScreen
-
-const styles = StyleSheet.create({
-  fab: {
-    backgroundColor: 'white',
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-  },
-})

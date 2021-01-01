@@ -25,7 +25,7 @@ const ProfileScreen = ({ route }) => {
       <Image style={styles.avatar} source={{ uri: APP_URL + user.image }} />
       <View style={styles.body}>
         <View style={styles.bodyContent}>
-          <Text style={styles.name}>{profileName(user.profile)}</Text>
+          <Text style={styles.name}>{profileName(user)}</Text>
           <Text style={styles.info}>BSCS-8B (BATCH: 2017)</Text>
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum

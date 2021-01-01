@@ -9,6 +9,7 @@ import MembersScreen from '../../screens/Groups/MembersScreen'
 import CommentsScreen from '../../screens/Groups/CommentsScreen'
 import CreateGroupScreen from '../../screens/Groups/CreateGroupScreen'
 import ProfileScreen from '../../screens/User/ProfileScreen'
+import AddMembersScreen from '../../screens/Groups/AddMembersScreen'
 import { APP_URL } from '../../constants'
 
 const Stack = createStackNavigator()
@@ -47,7 +48,12 @@ const GroupsStack = () => {
       <Stack.Screen
         name="Posts"
         component={PostsScreen}
-        options={({ navigation, route }) => ({
+        options={({
+          navigation,
+          route: {
+            params: { group },
+          },
+        }) => ({
           headerTitle: (
             <View
               style={{
@@ -57,13 +63,10 @@ const GroupsStack = () => {
                 alignItems: 'center',
               }}
             >
-              <Avatar.Image
-                size={40}
-                source={{ uri: APP_URL + route.params.image }}
-              />
+              <Avatar.Image size={40} source={{ uri: APP_URL + group.image }} />
               <View style={{ paddingLeft: 10 }}>
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                  {route.params.name}
+                  {group.name}
                 </Text>
               </View>
             </View>
@@ -80,9 +83,11 @@ const GroupsStack = () => {
             >
               <Menu.Item
                 title="Members"
-                onPress={() =>
-                  navigation.navigate('Members', { groupId: route.params.id })
-                }
+                onPress={() => navigation.navigate('Members', { group })}
+              />
+              <Menu.Item
+                title="Add members"
+                onPress={() => navigation.navigate('AddMembers', { group })}
               />
               <Menu.Item onPress={() => {}} title="Mute notifications" />
               <Divider />
@@ -93,6 +98,13 @@ const GroupsStack = () => {
       />
       <Stack.Screen name="Members" component={MembersScreen} />
       <Stack.Screen name="Comments" component={CommentsScreen} />
+      <Stack.Screen
+        name="AddMembers"
+        component={AddMembersScreen}
+        options={{
+          title: 'Add Members',
+        }}
+      />
       <Stack.Screen
         name="CreateGroup"
         component={CreateGroupScreen}

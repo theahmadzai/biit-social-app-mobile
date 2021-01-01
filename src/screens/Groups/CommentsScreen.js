@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { FlatList, Alert } from 'react-native'
-import { TextInput } from 'react-native-paper'
+import { Alert, FlatList, RefreshControl } from 'react-native'
+import { Container, Form, Item, Input, Icon } from 'native-base'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import Loading from '../../components/Loading'
 import CommentPreview from '../../components/CommentPreview'
@@ -44,18 +44,21 @@ const CommentsScreen = ({ route }) => {
 
   const [comment, onCommentChange] = useState('')
 
-  const { data, loading, refetch, networkStatus } = useQuery(
+  const { data, loading, error, refetch, networkStatus } = useQuery(
     POST_COMMENTS_QUERY,
     {
       variables: { id: postId },
     }
   )
 
-  const [createComment, { loading: creatingComment, error }] = useMutation(
+  const [createComment, { loading: creatingComment }] = useMutation(
     CREATE_COMMENT_MUTATION,
     {
       onCompleted() {
         onCommentChange('')
+      },
+      onError(err) {
+        Alert.alert(err.name, err.message)
       },
       update(cache, { data: { createComment } }) {
         const existingComments = cache.readQuery({
@@ -77,7 +80,7 @@ const CommentsScreen = ({ route }) => {
     }
   )
 
-  const submitComment = () => {
+  const createCommentAction = () => {
     createComment({
       variables: {
         input: { content: comment, postId },
@@ -85,33 +88,35 @@ const CommentsScreen = ({ route }) => {
     })
   }
 
-  if (loading) return <Loading />
+  if (loading || creatingComment) return <Loading />
   if (error) {
     Alert.alert(error.name, error.message)
   }
 
-  return creatingComment ? (
-    <Loading />
-  ) : (
-    <FlatList
-      ListHeaderComponent={
-        <TextInput
-          style={{ margin: 10 }}
-          mode="outlined"
-          placeholder="Comment something..."
-          value={comment}
-          onChangeText={onCommentChange}
-          multiline={true}
-          disabled={creatingComment}
-          right={<TextInput.Icon name="send" onPress={submitComment} />}
-        />
-      }
-      data={data.getPostComments}
-      keyExtractor={({ id }) => id}
-      renderItem={({ item }) => <CommentPreview {...item} />}
-      onRefresh={refetch}
-      refreshing={networkStatus === 4}
-    />
+  return (
+    <Container>
+      <FlatList
+        data={data.getPostComments}
+        keyExtractor={({ id }) => id}
+        renderItem={({ item }) => <CommentPreview comment={item} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={refetch}
+            refreshing={networkStatus === 4}
+          />
+        }
+      />
+      <Form style={{ padding: 10 }}>
+        <Item regular>
+          <Input
+            placeholder="Comment..."
+            value={comment}
+            onChangeText={onCommentChange}
+          />
+          <Icon name="send" onPress={createCommentAction} />
+        </Item>
+      </Form>
+    </Container>
   )
 }
 
