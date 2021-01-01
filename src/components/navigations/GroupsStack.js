@@ -23,28 +23,7 @@ const GroupsStack = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Groups"
-        component={GroupsScreen}
-        options={({ navigation }) => ({
-          headerRight: () => (
-            <Menu
-              visible={visible}
-              onDismiss={closeMenu}
-              anchor={
-                <TouchableOpacity onPress={openMenu}>
-                  <Fontisto name="more-v-a" size={18} style={{ padding: 20 }} />
-                </TouchableOpacity>
-              }
-            >
-              <Menu.Item
-                title="Create Group"
-                onPress={() => navigation.navigate('CreateGroup')}
-              />
-            </Menu>
-          ),
-        })}
-      />
+      <Stack.Screen name="Groups" component={GroupsScreen} />
       <Stack.Screen
         name="Posts"
         component={PostsScreen}
