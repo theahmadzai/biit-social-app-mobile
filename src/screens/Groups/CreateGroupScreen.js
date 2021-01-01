@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { Platform, Alert, View } from 'react-native'
-import { Title, TextInput, Button } from 'react-native-paper'
+import { Platform, Alert } from 'react-native'
+import {
+  Form,
+  Item,
+  Text,
+  Input,
+  Button,
+  Container,
+  Icon,
+  Label,
+  Thumbnail,
+} from 'native-base'
 import * as ImagePicker from 'expo-image-picker'
 import { gql, useMutation } from '@apollo/client'
 import mime from 'react-native-mime-types'
 import { ReactNativeFile } from 'apollo-upload-client'
+import { useNavigation } from '@react-navigation/native'
 import Loading from '../../components/Loading'
 
 const CREATE_GROUP_MUTATION = gql`
@@ -25,6 +36,8 @@ const CreateGroupScreen = () => {
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
 
+  const navigation = useNavigation()
+
   useEffect(() => {
     ;(async () => {
       if (Platform.OS !== 'web') {
@@ -37,7 +50,9 @@ const CreateGroupScreen = () => {
   }, [])
 
   const [createGroup, { loading, error }] = useMutation(CREATE_GROUP_MUTATION, {
-    onCompleted() {},
+    onCompleted() {
+      navigation.navigate('Groups')
+    },
     onError(err) {
       Alert.alert(err.name, err.message)
     },
@@ -82,27 +97,33 @@ const CreateGroupScreen = () => {
   }
 
   return (
-    <View>
-      <Title>Create Group Screen</Title>
-      <TextInput
-        mode="outlined"
-        placeholder="Group name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        mode="outlined"
-        placeholder="Group description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <Button icon="image" mode="contained" onPress={pickImageAction}>
-        Pick Group Image
-      </Button>
-      <Button mode="contained" onPress={createGroupAction}>
-        Create Group
-      </Button>
-    </View>
+    <Container>
+      <Form style={{ padding: 10 }}>
+        <Item regular style={{ marginBottom: 10 }}>
+          {image ? (
+            <Thumbnail
+              style={{ marginLeft: 10 }}
+              small
+              source={{ uri: image.uri }}
+            />
+          ) : null}
+          <Input placeholder="Name" value={name} onChangeText={setName} />
+          <Icon name="image" onPress={pickImageAction} />
+        </Item>
+        <Item floatingLabel last style={{ marginBottom: 10 }}>
+          <Label>Description</Label>
+          <Input
+            multiline
+            numberOfLines={4}
+            value={description}
+            onChangeText={setDescription}
+          />
+        </Item>
+        <Button dark onPress={createGroupAction}>
+          <Text>Create Group</Text>
+        </Button>
+      </Form>
+    </Container>
   )
 }
 
