@@ -49,52 +49,46 @@ const CreateGroupScreen = () => {
     })()
   }, [])
 
-  const [createGroup, { loading, error }] = useMutation(CREATE_GROUP_MUTATION, {
-    onCompleted() {
-      navigation.navigate('Groups')
-    },
-    onError(err) {
-      Alert.alert(err.name, err.message)
-    },
-  })
+  const [createGroup, { loading: creatingGroup }] = useMutation(
+    CREATE_GROUP_MUTATION,
+    {
+      onCompleted() {
+        navigation.navigate('Groups')
+      },
+      onError(err) {
+        Alert.alert(err.name, err.message)
+      },
+    }
+  )
 
   const pickImageAction = async () => {
     const file = await ImagePicker.launchImageLibraryAsync({
       mediaType: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     })
 
     if (!file.cancelled) {
-      setImage(file)
+      const type = mime.lookup(file.uri) || 'image'
+      const name = `group-image.${mime.extension(type)}`
+
+      setImage({ uri: file.uri, type, name })
     }
   }
 
   const createGroupAction = () => {
-    const imageUri = image.uri
-    const imageType = mime.lookup(imageUri) || 'image'
-    const imageName = `group-image.${mime.extension(imageType)}`
-
     createGroup({
       variables: {
         input: {
           name,
           description,
-          image: new ReactNativeFile({
-            uri: imageUri,
-            type: imageType,
-            name: imageName,
-          }),
+          image: image ? new ReactNativeFile(image) : null,
         },
       },
     })
   }
 
-  if (loading) return <Loading />
-  if (error) {
-    Alert.alert(error.name, error.message)
-  }
+  if (creatingGroup) return <Loading />
 
   return (
     <Container>

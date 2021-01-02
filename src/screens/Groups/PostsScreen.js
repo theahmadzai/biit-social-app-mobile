@@ -121,7 +121,17 @@ const PostsScreen = ({ route }) => {
       })
 
       if (!file.cancelled) {
-        setFiles([...files, file])
+        const type = mime.lookup(file.uri) || 'image'
+        const name = `file-${files.length}.${mime.extension(type)}`
+
+        setFiles([
+          ...files,
+          {
+            uri: file.uri,
+            type,
+            name,
+          },
+        ])
       }
     }
 
@@ -130,16 +140,7 @@ const PostsScreen = ({ route }) => {
         variables: {
           input: {
             text,
-            media: files.map(({ uri }, i) => {
-              const type = mime.lookup(uri) || 'image'
-              const name = `file-${i}.${mime.extension(type)}`
-
-              return new ReactNativeFile({
-                uri,
-                type,
-                name,
-              })
-            }),
+            media: files.map(file => new ReactNativeFile(file)),
             groupId,
           },
         },

@@ -12,7 +12,7 @@ export const getAuthToken = async () => {
     }
   }
 
-  return token
+  return token ? `Bearer ${token}` : null
 }
 
 export const profileName = ({ profile }) => {
