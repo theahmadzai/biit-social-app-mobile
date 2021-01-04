@@ -25,7 +25,12 @@ const PostPreview = ({ post: { id, text, createdAt, media, user } }) => {
         <Left>
           <Thumbnail source={{ uri: APP_URL + user.image }} />
           <Body>
-            <Text style={{ fontWeight: 'bold' }}>{profileName(user)}</Text>
+            <Text
+              style={{ fontWeight: 'bold' }}
+              onPress={() => navigation.navigate('Profile', user)}
+            >
+              {profileName(user)}
+            </Text>
             <Text note>{moment(+createdAt).fromNow()}</Text>
           </Body>
         </Left>
