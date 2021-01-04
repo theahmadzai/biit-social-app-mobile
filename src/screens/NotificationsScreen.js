@@ -22,9 +22,7 @@ const NotificationsScreen = () => {
   })
 
   if (loading) return <Loading />
-  if (error) {
-    Alert.alert(error.name, error.message)
-  }
+  if (error) Alert.alert(error.name, error.message)
 
   return (
     <Container>

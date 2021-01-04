@@ -1,62 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { Platform, Alert, RefreshControl, Image, FlatList } from 'react-native'
 import { Container, Form, Item, Input, Icon, Thumbnail } from 'native-base'
-import { gql, useQuery, useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import * as ImagePicker from 'expo-image-picker'
 import mime from 'react-native-mime-types'
 import { ReactNativeFile } from 'apollo-upload-client'
+import { GROUP_POSTS, CREATE_GROUP_POST } from '../../graphql'
 import { useAuth } from '../../contexts/AuthContext'
 import PostPreview from '../../components/PostPreview'
 import Loading from '../../components/Loading'
 import { APP_URL } from '../../constants'
-
-const GROUP_POSTS_QUERY = gql`
-  query GetGroupPosts($id: ID!) {
-    getGroupPosts(id: $id) {
-      id
-      text
-      createdAt
-      media {
-        id
-        filename
-      }
-      user {
-        id
-        username
-        image
-        profile {
-          firstName
-          middleName
-          lastName
-        }
-      }
-    }
-  }
-`
-
-const CREATE_POST_MUTATION = gql`
-  mutation CreatePost($input: CreatePostInput!) {
-    createPost(input: $input) {
-      id
-      text
-      createdAt
-      media {
-        id
-        filename
-      }
-      user {
-        id
-        username
-        image
-        profile {
-          firstName
-          middleName
-          lastName
-        }
-      }
-    }
-  }
-`
 
 const PostsScreen = ({ route }) => {
   const { id: groupId } = route.params.group
@@ -77,16 +30,13 @@ const PostsScreen = ({ route }) => {
     })()
   }, [])
 
-  const {
-    data,
-    loading,
-    error,
-    refetch,
-    networkStatus,
-  } = useQuery(GROUP_POSTS_QUERY, { variables: { id: groupId } })
+  const { data, loading, error, refetch, networkStatus } = useQuery(
+    GROUP_POSTS,
+    { variables: { id: groupId } }
+  )
 
-  const [createPost, { loading: creatingPost }] = useMutation(
-    CREATE_POST_MUTATION,
+  const [createGroupPost, { loading: creatingPost }] = useMutation(
+    CREATE_GROUP_POST,
     {
       onCompleted() {
         onTextChange('')
@@ -95,17 +45,17 @@ const PostsScreen = ({ route }) => {
       onError(err) {
         Alert.alert(err.name, err.message)
       },
-      update(cache, { data: { createPost } }) {
+      update(cache, { data: { createGroupPost } }) {
         const existingPosts = cache.readQuery({
-          query: GROUP_POSTS_QUERY,
+          query: GROUP_POSTS,
           variables: { id: groupId },
         })
 
         cache.writeQuery({
-          query: GROUP_POSTS_QUERY,
+          query: GROUP_POSTS,
           variables: { id: groupId },
           data: {
-            getGroupPosts: [createPost, ...existingPosts.getGroupPosts],
+            groupPosts: [createGroupPost, ...existingPosts.groupPosts],
           },
         })
       },
@@ -135,8 +85,8 @@ const PostsScreen = ({ route }) => {
       }
     }
 
-    const createPostAction = () => {
-      createPost({
+    const createGroupPostAction = () => {
+      createGroupPost({
         variables: {
           input: {
             text,
@@ -161,7 +111,7 @@ const PostsScreen = ({ route }) => {
             onChangeText={onTextChange}
           />
           <Icon name="image" onPress={pickImageAction} />
-          <Icon name="send" onPress={createPostAction} />
+          <Icon name="send" onPress={createGroupPostAction} />
         </Item>
         <FlatList
           horizontal
@@ -183,18 +133,16 @@ const PostsScreen = ({ route }) => {
         />
       </Form>
     )
-  }, [createPost, groupId, files, text, user.image])
+  }, [createGroupPost, groupId, files, text, user.image])
 
   if (loading || creatingPost) return <Loading />
-  if (error) {
-    Alert.alert(error.name, error.message)
-  }
+  if (error) Alert.alert(error.name, error.message)
 
   return (
     <Container>
       <FlatList
         ListHeaderComponent={headerComponent}
-        data={data.getGroupPosts}
+        data={data.groupPosts}
         keyExtractor={({ id }) => id}
         renderItem={({ item }) => <PostPreview post={item} />}
         refreshControl={

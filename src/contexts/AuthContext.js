@@ -1,26 +1,8 @@
 import React, { createContext, useContext, useState } from 'react'
 import { Alert } from 'react-native'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const LOGIN_MUTATION = gql`
-  mutation LoginUser($credentials: AuthInput!) {
-    login(input: $credentials) {
-      token
-      user {
-        id
-        username
-        role
-        image
-        profile {
-          firstName
-          middleName
-          lastName
-        }
-      }
-    }
-  }
-`
+import { LOGIN } from '../graphql'
 
 const initialState = {
   token: null,
@@ -46,7 +28,7 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(initialState)
   const [loginLoading, setLoginLoading] = useState(false)
 
-  const [loginUser] = useMutation(LOGIN_MUTATION, {
+  const [loginUser] = useMutation(LOGIN, {
     onCompleted: async ({ login: { token, user } }) => {
       const auth = { token, user, isLoggedIn: true }
       await AsyncStorage.setItem('auth', JSON.stringify(auth))

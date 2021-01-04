@@ -1,50 +1,19 @@
 import React, { useState } from 'react'
-import { Alert } from 'react-native'
-import { Container, List, Form, Item, Input, Icon, Button } from 'native-base'
-import { gql, useLazyQuery, useMutation } from '@apollo/client'
+import { Alert, FlatList } from 'react-native'
+import { Container, Form, Item, Input, Icon, Button } from 'native-base'
+import { useLazyQuery, useMutation } from '@apollo/client'
+import { SEARCH_USERS, GROUP_MEMBERS, ADD_GROUP_MEMBER } from '../../graphql'
 import UserPreview from '../../components/UserPreview'
 import Loading from '../../components/Loading'
-
-const SEARCH_USERS_QUERY = gql`
-  query SearchUsers($input: SearchUsersInput!) {
-    searchUsers(input: $input) {
-      id
-      username
-      image
-      role
-      profile {
-        firstName
-        middleName
-        lastName
-      }
-    }
-  }
-`
-
-const ADD_GROUP_MEMBER_MUTATION = gql`
-  mutation AddGroupMember($input: AddGroupMemberInput!) {
-    addGroupMember(input: $input) {
-      id
-      username
-      image
-      role
-      profile {
-        firstName
-        middleName
-        lastName
-      }
-    }
-  }
-`
 
 const AddMembersScreen = ({ route }) => {
   const groupId = route.params.group.id
 
   const [searchFilter, setSearchFilter] = useState('')
-  const [search, { data, loading, error }] = useLazyQuery(SEARCH_USERS_QUERY)
+  const [search, { data, loading, error }] = useLazyQuery(SEARCH_USERS)
 
   const [addGroupMember, { loading: addingMember }] = useMutation(
-    ADD_GROUP_MEMBER_MUTATION,
+    ADD_GROUP_MEMBER,
     {
       onCompleted(data) {
         Alert.alert(
@@ -54,6 +23,17 @@ const AddMembersScreen = ({ route }) => {
       },
       onError(err) {
         Alert.alert(err.name, err.message)
+      },
+      update(cache, { data: { addGroupMember } }) {
+        const { groupMembers } = cache.readQuery({
+          query: GROUP_MEMBERS,
+          variables: { id: groupId },
+        })
+        cache.writeQuery({
+          query: GROUP_MEMBERS,
+          variables: { id: groupId },
+          data: { groupMembers: groupMembers.concat([addGroupMember]) },
+        })
       },
     }
   )
@@ -73,9 +53,7 @@ const AddMembersScreen = ({ route }) => {
   }
 
   if (loading || addingMember) return <Loading />
-  if (error) {
-    Alert.alert(error.name, error.message)
-  }
+  if (error) Alert.alert(error.name, error.message)
 
   return (
     <Container>
@@ -89,8 +67,8 @@ const AddMembersScreen = ({ route }) => {
           <Icon active name="search" onPress={searchUsersAction} />
         </Item>
       </Form>
-      <List
-        dataArray={data ? data.searchUsers : []}
+      <FlatList
+        data={data ? data.searchUsers : []}
         keyExtractor={({ id }) => id}
         renderItem={({ item }) => (
           <UserPreview
@@ -110,7 +88,7 @@ const AddMembersScreen = ({ route }) => {
             }
           />
         )}
-      ></List>
+      />
     </Container>
   )
 }

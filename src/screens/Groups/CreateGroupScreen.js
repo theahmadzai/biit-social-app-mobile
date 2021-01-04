@@ -12,31 +12,41 @@ import {
   Thumbnail,
 } from 'native-base'
 import * as ImagePicker from 'expo-image-picker'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import mime from 'react-native-mime-types'
 import { ReactNativeFile } from 'apollo-upload-client'
 import { useNavigation } from '@react-navigation/native'
+import { USER_GROUPS, CREATE_GROUP } from '../../graphql'
+import { useAuth } from '../../contexts/AuthContext'
 import Loading from '../../components/Loading'
 
-const CREATE_GROUP_MUTATION = gql`
-  mutation CreateGroup($input: CreateGroupInput!) {
-    createGroup(input: $input) {
-      name
-      description
-      image
-      owner {
-        username
-      }
-    }
-  }
-`
-
 const CreateGroupScreen = () => {
+  const { user } = useAuth()
+  const navigation = useNavigation()
+
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
 
-  const navigation = useNavigation()
+  const [createGroup, { loading: creatingGroup }] = useMutation(CREATE_GROUP, {
+    onCompleted() {
+      navigation.navigate('Groups')
+    },
+    onError(err) {
+      Alert.alert(err.name, err.message)
+    },
+    update(cache, { data: { createGroup } }) {
+      const { userGroups } = cache.readQuery({
+        query: USER_GROUPS,
+        variables: { id: user.id },
+      })
+      cache.writeQuery({
+        query: USER_GROUPS,
+        variables: { id: user.id },
+        data: { userGroups: userGroups.concat([createGroup]) },
+      })
+    },
+  })
 
   useEffect(() => {
     ;(async () => {
@@ -48,18 +58,6 @@ const CreateGroupScreen = () => {
       }
     })()
   }, [])
-
-  const [createGroup, { loading: creatingGroup }] = useMutation(
-    CREATE_GROUP_MUTATION,
-    {
-      onCompleted() {
-        navigation.navigate('Groups')
-      },
-      onError(err) {
-        Alert.alert(err.name, err.message)
-      },
-    }
-  )
 
   const pickImageAction = async () => {
     const file = await ImagePicker.launchImageLibraryAsync({
