@@ -12,9 +12,7 @@ const InitialScreen = () => {
   useEffect(() => {
     AsyncStorage.getItem('auth')
       .then(state => {
-        if (state) {
-          setAuth(JSON.parse(state))
-        }
+        if (state) setAuth(JSON.parse(state))
       })
       .then(() => setLoading(false))
     return () => setAuth({})
