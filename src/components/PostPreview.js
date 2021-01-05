@@ -16,7 +16,9 @@ import moment from 'moment'
 import { APP_URL } from '../constants'
 import { profileName } from '../utils'
 
-const PostPreview = ({ post: { id, text, createdAt, media, user } }) => {
+const PostPreview = ({
+  post: { id, text, createdAt, media, user, comments },
+}) => {
   const navigation = useNavigation()
 
   return (
@@ -67,7 +69,7 @@ const PostPreview = ({ post: { id, text, createdAt, media, user } }) => {
             onPress={() => navigation.navigate('Comments', { postId: id })}
           >
             <EvilIcons name="comment" size={34} />
-            <Text>Comment</Text>
+            <Text>{comments.length || null} Comment</Text>
           </Button>
         </Right>
       </CardItem>

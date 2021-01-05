@@ -116,10 +116,14 @@ export const GROUP_POSTS = gql`
       user {
         ...UserFields
       }
+      comments {
+        ...CommentFields
+      }
     }
   }
   ${POST_FIELDS}
   ${USER_FIELDS}
+  ${COMMENT_FIELDS}
 `
 
 export const CREATE_GROUP_POST = gql`
