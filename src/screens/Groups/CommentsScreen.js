@@ -48,6 +48,8 @@ const CommentsScreen = ({ route }) => {
   )
 
   const createPostCommentAction = () => {
+    if (!comment.trim().length) return
+
     createPostComment({
       variables: {
         input: { content: comment, postId },
