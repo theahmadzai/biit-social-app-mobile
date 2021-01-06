@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler'
 import React, { useEffect } from 'react'
 import { Platform } from 'react-native'
+import { Root } from 'native-base'
 import * as ImagePicker from 'expo-image-picker'
 import { StatusBar } from 'expo-status-bar'
 import { useFonts } from 'expo-font'
@@ -38,8 +39,10 @@ const App = () => {
       <AuthProvider>
         <PaperProvider>
           <NavigationContainer>
-            <StatusBar style="auto" />
-            <InitialScreen />
+            <Root>
+              <StatusBar style="auto" />
+              <InitialScreen />
+            </Root>
           </NavigationContainer>
         </PaperProvider>
       </AuthProvider>

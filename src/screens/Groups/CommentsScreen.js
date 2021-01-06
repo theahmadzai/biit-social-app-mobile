@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, FlatList, RefreshControl } from 'react-native'
-import { Container, Form, Item, Input, Icon } from 'native-base'
+import { Container, Form, Item, Input, Icon, Toast } from 'native-base'
 import { useQuery, useMutation } from '@apollo/client'
 import { POST_COMMENTS, CREATE_POST_COMMENT } from '../../graphql'
 import Loading from '../../components/Loading'
@@ -25,7 +25,11 @@ const CommentsScreen = ({ route }) => {
         onCommentChange('')
       },
       onError(err) {
-        Alert.alert(err.name, err.message)
+        Toast.show({
+          text: err.message,
+          duration: 3000,
+          type: 'danger',
+        })
       },
       update(cache, { data: { createPostComment } }) {
         const { postComments } = cache.readQuery({

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Alert } from 'react-native'
 import {
   Form,
   Item,
@@ -10,6 +9,7 @@ import {
   Icon,
   Label,
   Thumbnail,
+  Toast,
 } from 'native-base'
 import * as ImagePicker from 'expo-image-picker'
 import { useMutation } from '@apollo/client'
@@ -33,7 +33,11 @@ const CreateGroupScreen = () => {
       navigation.navigate('Groups')
     },
     onError(err) {
-      Alert.alert(err.name, err.message)
+      Toast.show({
+        text: err.message,
+        duration: 3000,
+        type: 'danger',
+      })
     },
     update(cache, { data: { createGroup } }) {
       const { userGroups } = cache.readQuery({

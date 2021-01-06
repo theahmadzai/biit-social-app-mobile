@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Alert, FlatList } from 'react-native'
-import { Container, Form, Item, Input, Icon, Button } from 'native-base'
+import { Container, Form, Item, Input, Icon, Button, Toast } from 'native-base'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { SEARCH_USERS, GROUP_MEMBERS, ADD_GROUP_MEMBER } from '../../graphql'
 import UserPreview from '../../components/UserPreview'
 import Loading from '../../components/Loading'
+import { profileName } from '../../utils'
 
 const AddMembersScreen = ({ route }) => {
   const groupId = route.params.group.id
@@ -15,14 +16,19 @@ const AddMembersScreen = ({ route }) => {
   const [addGroupMember, { loading: addingMember }] = useMutation(
     ADD_GROUP_MEMBER,
     {
-      onCompleted(data) {
-        Alert.alert(
-          'Success',
-          `User: '${data.addGroupMember.username}' has been added.`
-        )
+      onCompleted({ addGroupMember }) {
+        Toast.show({
+          text: `Added: ${profileName(addGroupMember)}`,
+          duration: 3000,
+          type: 'success',
+        })
       },
       onError(err) {
-        Alert.alert(err.name, err.message)
+        Toast.show({
+          text: err.message,
+          duration: 3000,
+          type: 'danger',
+        })
       },
       update(cache, { data: { addGroupMember } }) {
         const { groupMembers } = cache.readQuery({

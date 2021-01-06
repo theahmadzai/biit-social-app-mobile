@@ -1,6 +1,14 @@
 import React, { useState, useMemo } from 'react'
 import { Alert, RefreshControl, Image, FlatList } from 'react-native'
-import { Container, Form, Item, Input, Icon, Thumbnail } from 'native-base'
+import {
+  Container,
+  Form,
+  Item,
+  Input,
+  Icon,
+  Thumbnail,
+  Toast,
+} from 'native-base'
 import { useQuery, useMutation } from '@apollo/client'
 import * as ImagePicker from 'expo-image-picker'
 import mime from 'react-native-mime-types'
@@ -32,7 +40,11 @@ const PostsScreen = ({ route }) => {
         setFiles([])
       },
       onError(err) {
-        Alert.alert(err.name, err.message)
+        Toast.show({
+          text: err.message,
+          duration: 3000,
+          type: 'danger',
+        })
       },
       update(cache, { data: { createGroupPost } }) {
         const existingPosts = cache.readQuery({

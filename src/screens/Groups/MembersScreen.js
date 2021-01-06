@@ -1,10 +1,11 @@
 import React from 'react'
 import { Alert, FlatList, RefreshControl } from 'react-native'
-import { Container, Icon, Button } from 'native-base'
+import { Container, Icon, Button, Toast } from 'native-base'
 import { useQuery, useMutation } from '@apollo/client'
 import { GROUP_MEMBERS, REMOVE_GROUP_MEMBER } from '../../graphql'
 import UserPreview from '../../components/UserPreview'
 import Loading from '../../components/Loading'
+import { profileName } from '../../utils'
 
 const MembersScreen = ({ route }) => {
   const groupId = route.params.group.id
@@ -19,14 +20,19 @@ const MembersScreen = ({ route }) => {
   const [removeGroupMember, { loading: removingMember }] = useMutation(
     REMOVE_GROUP_MEMBER,
     {
-      onCompleted(data) {
-        Alert.alert(
-          'Success',
-          `User: '${data.removeGroupMember.username}' has been removed.`
-        )
+      onCompleted({ removeGroupMember }) {
+        Toast.show({
+          text: `Removed: ${profileName(removeGroupMember)}`,
+          duration: 3000,
+          type: 'success',
+        })
       },
       onError(err) {
-        Alert.alert(err.name, err.message)
+        Toast.show({
+          text: err.message,
+          duration: 3000,
+          type: 'danger',
+        })
       },
       update(cache, { data: { removeGroupMember } }) {
         const { groupMembers } = cache.readQuery({
