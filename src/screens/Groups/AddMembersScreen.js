@@ -44,10 +44,10 @@ const AddMembersScreen = ({ route }) => {
     })
   }
 
-  const addGroupMemberAction = username => {
+  const addGroupMemberAction = userId => {
     addGroupMember({
       variables: {
-        input: { username, groupId },
+        input: { userId, groupId },
       },
     })
   }
@@ -77,7 +77,7 @@ const AddMembersScreen = ({ route }) => {
               <Button
                 small
                 style={{ backgroundColor: '#f9f9f9' }}
-                onPress={() => addGroupMemberAction(item.username)}
+                onPress={() => addGroupMemberAction(item.id)}
               >
                 <Icon
                   active

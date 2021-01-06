@@ -65,7 +65,7 @@ export const GROUP_MEMBERS = gql`
 `
 
 export const ADD_GROUP_MEMBER = gql`
-  mutation AddGroupMember($input: AddGroupMemberInput!) {
+  mutation AddGroupMember($input: GroupMemberInput!) {
     addGroupMember(input: $input) {
       ...UserFields
     }
@@ -74,7 +74,7 @@ export const ADD_GROUP_MEMBER = gql`
 `
 
 export const REMOVE_GROUP_MEMBER = gql`
-  mutation RemoveGroupMember($input: RemoveGroupMemberInput!) {
+  mutation RemoveGroupMember($input: GroupMemberInput!) {
     removeGroupMember(input: $input) {
       ...UserFields
     }
@@ -101,7 +101,7 @@ export const USER_GROUPS = gql`
 `
 
 export const CREATE_GROUP = gql`
-  mutation CreateGroup($input: CreateGroupInput!) {
+  mutation CreateGroup($input: GroupInput!) {
     createGroup(input: $input) {
       ...GroupFields
     }
@@ -127,7 +127,7 @@ export const GROUP_POSTS = gql`
 `
 
 export const CREATE_GROUP_POST = gql`
-  mutation CreateGroupPost($input: CreatePostInput!) {
+  mutation CreateGroupPost($input: PostInput!) {
     createGroupPost(input: $input) {
       ...PostFields
       user {
@@ -153,7 +153,7 @@ export const POST_COMMENTS = gql`
 `
 
 export const CREATE_POST_COMMENT = gql`
-  mutation CreatePostComment($input: CreateCommentInput!) {
+  mutation CreatePostComment($input: CommentInput!) {
     createPostComment(input: $input) {
       ...CommentFields
       user {

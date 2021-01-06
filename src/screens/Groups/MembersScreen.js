@@ -46,8 +46,8 @@ const MembersScreen = ({ route }) => {
     }
   )
 
-  const removeGroupMemberAction = username => {
-    removeGroupMember({ variables: { input: { username, groupId } } })
+  const removeGroupMemberAction = userId => {
+    removeGroupMember({ variables: { input: { userId, groupId } } })
   }
 
   if (loading || removingMember) return <Loading />
@@ -65,7 +65,7 @@ const MembersScreen = ({ route }) => {
               <Button
                 small
                 style={{ backgroundColor: '#f9f9f9' }}
-                onPress={() => removeGroupMemberAction(item.username)}
+                onPress={() => removeGroupMemberAction(item.id)}
               >
                 <Icon
                   active
