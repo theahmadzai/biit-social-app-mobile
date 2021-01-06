@@ -39,17 +39,11 @@ const AddMembersScreen = ({ route }) => {
   )
 
   const searchUsersAction = () => {
-    search({
-      variables: { input: { query: searchFilter } },
-    })
+    search({ variables: { input: { query: searchFilter } } })
   }
 
   const addGroupMemberAction = userId => {
-    addGroupMember({
-      variables: {
-        input: { userId, groupId },
-      },
-    })
+    addGroupMember({ variables: { input: { userId, groupId } } })
   }
 
   if (loading || addingMember) return <Loading />

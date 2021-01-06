@@ -43,7 +43,17 @@ const client = new ApolloClient({
       if (networkError) console.log(`[Network error]: ${networkError}`)
     })
   ),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          groupMembers: {
+            merge: false,
+          },
+        },
+      },
+    },
+  }),
 })
 
 export default client
