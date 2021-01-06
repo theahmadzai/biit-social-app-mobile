@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Platform, Alert } from 'react-native'
+import React, { useState } from 'react'
+import { Alert } from 'react-native'
 import {
   Form,
   Item,
@@ -47,17 +47,6 @@ const CreateGroupScreen = () => {
       })
     },
   })
-
-  useEffect(() => {
-    ;(async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestCameraRollPermissionsAsync()
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!')
-        }
-      }
-    })()
-  }, [])
 
   const pickImageAction = async () => {
     const file = await ImagePicker.launchImageLibraryAsync({

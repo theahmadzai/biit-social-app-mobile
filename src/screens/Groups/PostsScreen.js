@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react'
-import { Platform, Alert, RefreshControl, Image, FlatList } from 'react-native'
+import React, { useState, useMemo } from 'react'
+import { Alert, RefreshControl, Image, FlatList } from 'react-native'
 import { Container, Form, Item, Input, Icon, Thumbnail } from 'native-base'
 import { useQuery, useMutation } from '@apollo/client'
 import * as ImagePicker from 'expo-image-picker'
@@ -18,17 +18,6 @@ const PostsScreen = ({ route }) => {
   const [files, setFiles] = useState([])
 
   const { user } = useAuth()
-
-  useEffect(() => {
-    ;(async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestCameraRollPermissionsAsync()
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!')
-        }
-      }
-    })()
-  }, [])
 
   const { data, loading, error, refetch, networkStatus } = useQuery(
     GROUP_POSTS,
