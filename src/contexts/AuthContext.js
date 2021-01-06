@@ -29,13 +29,13 @@ export const AuthProvider = ({ children }) => {
   const [loginLoading, setLoginLoading] = useState(false)
 
   const [loginUser] = useMutation(LOGIN, {
-    onCompleted: async ({ login: { token, user } }) => {
+    async onCompleted({ login: { token, user } }) {
       const auth = { token, user, isLoggedIn: true }
       await AsyncStorage.setItem('auth', JSON.stringify(auth))
       setAuth(auth)
       setLoginLoading(false)
     },
-    onError: err => {
+    onError(err) {
       Alert.alert(err.name, err.message)
       setLoginLoading(false)
     },
