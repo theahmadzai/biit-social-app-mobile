@@ -31,15 +31,19 @@ const AddMembersScreen = ({ route }) => {
         })
       },
       update(cache, { data: { addGroupMember } }) {
-        const { groupMembers } = cache.readQuery({
-          query: GROUP_MEMBERS,
-          variables: { id: groupId },
-        })
-        cache.writeQuery({
-          query: GROUP_MEMBERS,
-          variables: { id: groupId },
-          data: { groupMembers: groupMembers.concat([addGroupMember]) },
-        })
+        try {
+          const { groupMembers } = cache.readQuery({
+            query: GROUP_MEMBERS,
+            variables: { id: groupId },
+          })
+          cache.writeQuery({
+            query: GROUP_MEMBERS,
+            variables: { id: groupId },
+            data: { groupMembers: groupMembers.concat([addGroupMember]) },
+          })
+        } catch (err) {
+          console.log(err.message)
+        }
       },
     }
   )
