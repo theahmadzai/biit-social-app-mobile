@@ -22,7 +22,7 @@ import { APP_URL } from '../../constants'
 const PostsScreen = ({ route }) => {
   const { id: groupId } = route.params.group
 
-  const [text, onTextChange] = useState('')
+  const [text, setText] = useState('')
   const [files, setFiles] = useState([])
 
   const { user } = useAuth()
@@ -36,7 +36,7 @@ const PostsScreen = ({ route }) => {
     CREATE_GROUP_POST,
     {
       onCompleted() {
-        onTextChange('')
+        setText('')
         setFiles([])
       },
       onError(err) {
@@ -109,7 +109,7 @@ const PostsScreen = ({ route }) => {
           <Input
             placeholder="Write something..."
             value={text}
-            onChangeText={onTextChange}
+            onChangeText={setText}
           />
           <Icon name="image" onPress={pickImageAction} />
           <Icon name="send" onPress={createGroupPostAction} />

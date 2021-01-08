@@ -12,8 +12,8 @@ import { useAuth } from '../../contexts/AuthContext'
 import Loading from '../../components/Loading'
 
 const LoginScreen = () => {
-  const [username, onChangeUsername] = useState('2017-ARID-103')
-  const [password, onChangePassword] = useState('123')
+  const [username, setUsername] = useState('2017-ARID-103')
+  const [password, setPassword] = useState('123')
 
   const { login, loginLoading } = useAuth()
 
@@ -35,14 +35,14 @@ const LoginScreen = () => {
           style={styles.input}
           placeholder="Username"
           value={username}
-          onChangeText={onChangeUsername}
+          onChangeText={setUsername}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Password"
           value={password}
-          onChangeText={onChangePassword}
+          onChangeText={setPassword}
           secureTextEntry={true}
         />
 

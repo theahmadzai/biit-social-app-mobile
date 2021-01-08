@@ -9,7 +9,7 @@ import CommentPreview from '../../components/CommentPreview'
 const CommentsScreen = ({ route }) => {
   const { postId } = route.params
 
-  const [comment, onCommentChange] = useState('')
+  const [comment, setComment] = useState('')
 
   const { data, loading, error, refetch, networkStatus } = useQuery(
     POST_COMMENTS,
@@ -22,7 +22,7 @@ const CommentsScreen = ({ route }) => {
     CREATE_POST_COMMENT,
     {
       onCompleted() {
-        onCommentChange('')
+        setComment('')
       },
       onError(err) {
         Toast.show({
@@ -78,7 +78,7 @@ const CommentsScreen = ({ route }) => {
           <Input
             placeholder="Comment..."
             value={comment}
-            onChangeText={onCommentChange}
+            onChangeText={setComment}
           />
           <Icon name="send" onPress={createPostCommentAction} />
         </Item>
