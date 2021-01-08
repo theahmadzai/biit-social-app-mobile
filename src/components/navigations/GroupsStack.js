@@ -68,7 +68,6 @@ const GroupsStack = () => {
                 title="Add members"
                 onPress={() => navigation.navigate('AddMembers', { group })}
               />
-              <Menu.Item onPress={() => {}} title="Mute notifications" />
               <Divider />
               <Menu.Item onPress={() => {}} title="Exit group" />
             </Menu>
