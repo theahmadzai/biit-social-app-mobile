@@ -75,14 +75,7 @@ const PostsScreen = ({ route }) => {
         const type = mime.lookup(file.uri) || 'image'
         const name = `file-${files.length}.${mime.extension(type)}`
 
-        setFiles([
-          ...files,
-          {
-            uri: file.uri,
-            type,
-            name,
-          },
-        ])
+        setFiles([...files, { uri: file.uri, type, name }])
       }
     }
 
