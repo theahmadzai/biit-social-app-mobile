@@ -2,7 +2,7 @@ import React from 'react'
 import { Alert, FlatList, RefreshControl } from 'react-native'
 import { Container, Icon, Button, Toast } from 'native-base'
 import { useQuery, useMutation } from '@apollo/client'
-import { GROUP_MEMBERS, REMOVE_GROUP_MEMBER } from '../../graphql'
+import { GROUP_USERS, REMOVE_GROUP_USER } from '../../graphql'
 import UserPreview from '../../components/UserPreview'
 import Loading from '../../components/Loading'
 import { profileName } from '../../utils'
@@ -11,18 +11,18 @@ const MembersScreen = ({ route }) => {
   const groupId = route.params.group.id
 
   const { data, loading, error, refetch, networkStatus } = useQuery(
-    GROUP_MEMBERS,
+    GROUP_USERS,
     {
       variables: { id: groupId },
     }
   )
 
-  const [removeGroupMember, { loading: removingMember }] = useMutation(
-    REMOVE_GROUP_MEMBER,
+  const [removeGroupUser, { loading: removingUser }] = useMutation(
+    REMOVE_GROUP_USER,
     {
-      onCompleted({ removeGroupMember }) {
+      onCompleted({ removeGroupUser }) {
         Toast.show({
-          text: `Removed: ${profileName(removeGroupMember)}`,
+          text: `Removed: ${profileName(removeGroupUser)}`,
           duration: 3000,
           type: 'success',
         })
@@ -34,17 +34,17 @@ const MembersScreen = ({ route }) => {
           type: 'danger',
         })
       },
-      update(cache, { data: { removeGroupMember } }) {
-        const { groupMembers } = cache.readQuery({
-          query: GROUP_MEMBERS,
+      update(cache, { data: { removeGroupUser } }) {
+        const { groupUsers } = cache.readQuery({
+          query: GROUP_USERS,
           variables: { id: groupId },
         })
         cache.writeQuery({
-          query: GROUP_MEMBERS,
+          query: GROUP_USERS,
           variables: { id: groupId },
           data: {
-            groupMembers: groupMembers.filter(
-              ({ id }) => id !== removeGroupMember.id
+            groupUsers: groupUsers.filter(
+              ({ id }) => id !== removeGroupUser.id
             ),
           },
         })
@@ -52,17 +52,17 @@ const MembersScreen = ({ route }) => {
     }
   )
 
-  const removeGroupMemberAction = userId => {
-    removeGroupMember({ variables: { input: { userId, groupId } } })
+  const removeGroupUserAction = userId => {
+    removeGroupUser({ variables: { input: { userId, groupId } } })
   }
 
-  if (loading || removingMember) return <Loading />
+  if (loading || removingUser) return <Loading />
   if (error) Alert.alert(error.name, error.message)
 
   return (
     <Container>
       <FlatList
-        data={data.groupMembers}
+        data={data.groupUsers}
         keyExtractor={({ id }) => id}
         renderItem={({ item }) => (
           <UserPreview
@@ -71,7 +71,7 @@ const MembersScreen = ({ route }) => {
               <Button
                 small
                 style={{ backgroundColor: '#f9f9f9' }}
-                onPress={() => removeGroupMemberAction(item.id)}
+                onPress={() => removeGroupUserAction(item.id)}
               >
                 <Icon
                   active

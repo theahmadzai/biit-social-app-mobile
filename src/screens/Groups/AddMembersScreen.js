@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Alert, FlatList } from 'react-native'
 import { Container, Form, Item, Input, Icon, Button, Toast } from 'native-base'
 import { useLazyQuery, useMutation } from '@apollo/client'
-import { SEARCH_USERS, GROUP_MEMBERS, ADD_GROUP_MEMBER } from '../../graphql'
+import { SEARCH_USERS, GROUP_USERS, ADD_GROUP_USER } from '../../graphql'
 import UserPreview from '../../components/UserPreview'
 import Loading from '../../components/Loading'
 import { profileName } from '../../utils'
@@ -13,50 +13,47 @@ const AddMembersScreen = ({ route }) => {
   const [searchFilter, setSearchFilter] = useState('')
   const [search, { data, loading, error }] = useLazyQuery(SEARCH_USERS)
 
-  const [addGroupMember, { loading: addingMember }] = useMutation(
-    ADD_GROUP_MEMBER,
-    {
-      onCompleted({ addGroupMember }) {
-        Toast.show({
-          text: `Added: ${profileName(addGroupMember)}`,
-          duration: 3000,
-          type: 'success',
+  const [addGroupUser, { loading: addingUser }] = useMutation(ADD_GROUP_USER, {
+    onCompleted({ addGroupUser }) {
+      Toast.show({
+        text: `Added: ${profileName(addGroupUser)}`,
+        duration: 3000,
+        type: 'success',
+      })
+    },
+    onError(err) {
+      Toast.show({
+        text: err.message,
+        duration: 3000,
+        type: 'danger',
+      })
+    },
+    update(cache, { data: { addGroupUser } }) {
+      try {
+        const { groupUsers } = cache.readQuery({
+          query: GROUP_USERS,
+          variables: { id: groupId },
         })
-      },
-      onError(err) {
-        Toast.show({
-          text: err.message,
-          duration: 3000,
-          type: 'danger',
+        cache.writeQuery({
+          query: GROUP_USERS,
+          variables: { id: groupId },
+          data: { groupUsers: groupUsers.concat([addGroupUser]) },
         })
-      },
-      update(cache, { data: { addGroupMember } }) {
-        try {
-          const { groupMembers } = cache.readQuery({
-            query: GROUP_MEMBERS,
-            variables: { id: groupId },
-          })
-          cache.writeQuery({
-            query: GROUP_MEMBERS,
-            variables: { id: groupId },
-            data: { groupMembers: groupMembers.concat([addGroupMember]) },
-          })
-        } catch (err) {
-          console.log(err.message)
-        }
-      },
-    }
-  )
+      } catch (err) {
+        console.log(err.message)
+      }
+    },
+  })
 
   const searchUsersAction = () => {
     search({ variables: { input: { query: searchFilter } } })
   }
 
-  const addGroupMemberAction = userId => {
-    addGroupMember({ variables: { input: { userId, groupId } } })
+  const addGroupUserAction = userId => {
+    addGroupUser({ variables: { input: { userId, groupId } } })
   }
 
-  if (loading || addingMember) return <Loading />
+  if (loading || addingUser) return <Loading />
   if (error) Alert.alert(error.name, error.message)
 
   return (
@@ -81,7 +78,7 @@ const AddMembersScreen = ({ route }) => {
               <Button
                 small
                 style={{ backgroundColor: '#f9f9f9' }}
-                onPress={() => addGroupMemberAction(item.id)}
+                onPress={() => addGroupUserAction(item.id)}
               >
                 <Icon
                   active

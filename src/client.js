@@ -36,7 +36,7 @@ const client = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          groupMembers: {
+          groupUsers: {
             merge: false,
           },
         },

@@ -55,27 +55,27 @@ export const LOGIN = gql`
   ${USER_FIELDS}
 `
 
-export const GROUP_MEMBERS = gql`
-  query GroupMembers($id: ID!) {
-    groupMembers(id: $id) {
+export const GROUP_USERS = gql`
+  query GroupUsers($id: ID!) {
+    groupUsers(id: $id) {
       ...UserFields
     }
   }
   ${USER_FIELDS}
 `
 
-export const ADD_GROUP_MEMBER = gql`
-  mutation AddGroupMember($input: GroupMemberInput!) {
-    addGroupMember(input: $input) {
+export const ADD_GROUP_USER = gql`
+  mutation AddGroupUser($input: GroupUserInput!) {
+    addGroupUser(input: $input) {
       ...UserFields
     }
   }
   ${USER_FIELDS}
 `
 
-export const REMOVE_GROUP_MEMBER = gql`
-  mutation RemoveGroupMember($input: GroupMemberInput!) {
-    removeGroupMember(input: $input) {
+export const REMOVE_GROUP_USER = gql`
+  mutation RemoveGroupUser($input: GroupUserInput!) {
+    removeGroupUser(input: $input) {
       ...UserFields
     }
   }
