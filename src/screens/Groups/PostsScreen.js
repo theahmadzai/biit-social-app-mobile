@@ -47,7 +47,7 @@ const PostsScreen = ({ route }) => {
         })
       },
       update(cache, { data: { createGroupPost } }) {
-        const existingPosts = cache.readQuery({
+        const { groupPosts } = cache.readQuery({
           query: GROUP_POSTS,
           variables: { id: groupId },
         })
@@ -56,7 +56,7 @@ const PostsScreen = ({ route }) => {
           query: GROUP_POSTS,
           variables: { id: groupId },
           data: {
-            groupPosts: [createGroupPost, ...existingPosts.groupPosts],
+            groupPosts: [createGroupPost, ...groupPosts],
           },
         })
       },
