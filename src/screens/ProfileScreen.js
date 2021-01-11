@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
-import { useAuth } from '../../contexts/AuthContext'
-import { APP_URL } from '../../constants'
-import { profileName } from '../../utils'
+import { useAuth } from '../contexts/AuthContext'
+import { APP_URL } from '../constants'
+import { profileName } from '../utils'
 
 const ProfileScreen = ({ route }) => {
   const { user: u, logout } = useAuth()
