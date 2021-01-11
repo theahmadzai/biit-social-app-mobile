@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../contexts/AuthContext'
 import BottomTabs from '../components/navigations/BottomTabs'
-import AuthStack from '../components/navigations/AuthStack'
+import LoginScreen from './LoginScreen'
 import SplashScreen from './SplashScreen'
 
 const InitialScreen = () => {
@@ -20,7 +20,7 @@ const InitialScreen = () => {
 
   if (loading) return <SplashScreen />
 
-  return isLoggedIn ? <BottomTabs /> : <AuthStack />
+  return isLoggedIn ? <BottomTabs /> : <LoginScreen />
 }
 
 export default InitialScreen
