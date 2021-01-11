@@ -8,7 +8,7 @@ import PostsScreen from '../../screens/Groups/PostsScreen'
 import MembersScreen from '../../screens/Groups/MembersScreen'
 import CommentsScreen from '../../screens/Groups/CommentsScreen'
 import CreateGroupScreen from '../../screens/Groups/CreateGroupScreen'
-import ProfileScreen from '../../screens/User/ProfileScreen'
+import ProfileScreen from '../../screens/ProfileScreen'
 import AddMembersScreen from '../../screens/Groups/AddMembersScreen'
 import { APP_URL } from '../../constants'
 
