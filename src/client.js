@@ -4,8 +4,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { createUploadLink } from 'apollo-upload-client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { getAuthToken } from './utils'
-
-const API_URL = 'http://192.168.1.2:3000/graphql'
+import { IP, PORT } from './constants'
 
 const client = new ApolloClient({
   link: split(
@@ -17,7 +16,7 @@ const client = new ApolloClient({
       )
     },
     new WebSocketLink({
-      uri: `ws://192.168.1.2:3000/graphql`,
+      uri: `ws://${IP}:${PORT}/graphql`,
       options: {
         reconnect: true,
         async connectionParams() {
@@ -29,14 +28,36 @@ const client = new ApolloClient({
       setContext(async (_, { headers }) => ({
         headers: { ...headers, authorization: await getAuthToken() },
       })),
-      createUploadLink({ uri: API_URL }),
+      createUploadLink({ uri: `http://${IP}:${PORT}/graphql` }),
     ])
   ),
   cache: new InMemoryCache({
     typePolicies: {
+      Post: {
+        fields: {
+          likes: {
+            merge: false,
+          },
+        },
+      },
+      Mutation: {
+        fields: {
+          togglePostLike: {
+            merge: false,
+          },
+        },
+      },
       Query: {
         fields: {
+          groupPosts: {
+            likes: {
+              merge: false,
+            },
+          },
           groupUsers: {
+            merge: false,
+          },
+          postLikes: {
             merge: false,
           },
         },
