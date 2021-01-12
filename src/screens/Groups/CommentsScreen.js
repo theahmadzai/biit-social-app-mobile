@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Alert, FlatList, RefreshControl } from 'react-native'
 import { Container, Form, Item, Input, Icon, Toast } from 'native-base'
-import { useQuery, useMutation } from '@apollo/client'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import { POST_COMMENTS, CREATE_POST_COMMENT } from '../../graphql'
 import Loading from '../../components/Loading'
 import CommentPreview from '../../components/CommentPreview'
@@ -41,6 +41,17 @@ const CommentsScreen = ({ route }) => {
           variables: { id: postId },
           data: {
             postComments: postComments.concat([createPostComment]),
+          },
+        })
+        cache.writeFragment({
+          id: `Post:${postId}`,
+          fragment: gql`
+            fragment PostCommentsCount on Post {
+              commentsCount
+            }
+          `,
+          data: {
+            commentsCount: postComments.length + 1,
           },
         })
       },
