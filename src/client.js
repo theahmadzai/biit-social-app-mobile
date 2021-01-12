@@ -33,13 +33,6 @@ const client = new ApolloClient({
   ),
   cache: new InMemoryCache({
     typePolicies: {
-      Post: {
-        fields: {
-          likes: {
-            merge: false,
-          },
-        },
-      },
       Mutation: {
         fields: {
           togglePostLike: {
@@ -50,14 +43,15 @@ const client = new ApolloClient({
       Query: {
         fields: {
           groupPosts: {
-            likes: {
-              merge: false,
-            },
+            merge: false,
           },
           groupUsers: {
             merge: false,
           },
           postLikes: {
+            merge: false,
+          },
+          postComments: {
             merge: false,
           },
         },
