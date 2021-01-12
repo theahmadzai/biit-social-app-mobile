@@ -7,6 +7,7 @@ import { Fontisto } from '@expo/vector-icons'
 import GroupsScreen from '../../screens/Groups/GroupsScreen'
 import PostsScreen from '../../screens/Groups/PostsScreen'
 import MembersScreen from '../../screens/Groups/MembersScreen'
+import LikesScreen from '../../screens/Groups/LikesScreen'
 import CommentsScreen from '../../screens/Groups/CommentsScreen'
 import CreateGroupScreen from '../../screens/Groups/CreateGroupScreen'
 import ProfileScreen from '../../screens/ProfileScreen'
@@ -69,6 +70,7 @@ const GroupsStack = () => {
         })}
       />
       <Stack.Screen name="Members" component={MembersScreen} />
+      <Stack.Screen name="Likes" component={LikesScreen} />
       <Stack.Screen name="Comments" component={CommentsScreen} />
       <Stack.Screen
         name="AddMembers"
