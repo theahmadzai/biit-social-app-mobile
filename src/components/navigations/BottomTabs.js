@@ -1,6 +1,6 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { AntDesign, MaterialIcons, Octicons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import HomeStack from './HomeStack'
 import GroupsStack from './GroupsStack'
 import ProfileStack from './UserStack'
@@ -12,8 +12,8 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       tabBarOptions={{
-        activeTintColor: 'teal',
-        inactiveTintColor: '#000',
+        activeTintColor: '#008e50',
+        inactiveTintColor: '#000000',
         showLabel: false,
         showIcon: true,
       }}
@@ -22,21 +22,21 @@ const BottomTabs = () => {
         name="Home"
         component={HomeStack}
         options={{
-          tabBarIcon: props => <AntDesign name="home" {...props} />,
+          tabBarIcon: props => <Feather {...props} name="activity" />,
         }}
       />
       <Tab.Screen
         name="Groups"
         component={GroupsStack}
         options={{
-          tabBarIcon: props => <MaterialIcons name="group" {...props} />,
+          tabBarIcon: props => <Feather {...props} name="users" />,
         }}
       />
       <Tab.Screen
         name="Settings"
         component={ProfileStack}
         options={{
-          tabBarIcon: props => <Octicons name="settings" {...props} />,
+          tabBarIcon: props => <Feather {...props} name="settings" />,
         }}
       />
       <Tab.Screen
@@ -44,7 +44,7 @@ const BottomTabs = () => {
         component={NotificationsStack}
         options={{
           tabBarBadge: 2,
-          tabBarIcon: props => <AntDesign name="bells" {...props} />,
+          tabBarIcon: props => <Feather {...props} name="bell" />,
         }}
       />
     </Tab.Navigator>
