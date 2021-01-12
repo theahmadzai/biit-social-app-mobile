@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
 import { Text, View, TouchableOpacity } from 'react-native'
-import { Avatar, Menu, Divider } from 'react-native-paper'
+import { Thumbnail } from 'native-base'
+import { Menu, Divider } from 'react-native-paper'
+import { createStackNavigator } from '@react-navigation/stack'
 import { Fontisto } from '@expo/vector-icons'
 import GroupsScreen from '../../screens/Groups/GroupsScreen'
 import PostsScreen from '../../screens/Groups/PostsScreen'
@@ -34,16 +35,9 @@ const GroupsStack = () => {
           },
         }) => ({
           headerTitle: (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Avatar.Image size={40} source={{ uri: APP_URL + group.image }} />
-              <View style={{ paddingLeft: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Thumbnail small source={{ uri: APP_URL + group.image }} />
+              <View style={{ marginLeft: 10 }}>
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                   {group.name}
                 </Text>
