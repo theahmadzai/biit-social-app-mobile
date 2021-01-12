@@ -32,6 +32,15 @@ export const POST_FIELDS = gql`
       id
       filename
     }
+    likesCount
+    commentsCount
+  }
+`
+
+export const LIKE_FIELDS = gql`
+  fragment LikeFields on Like {
+    id
+    createdAt
   }
 `
 
@@ -116,14 +125,10 @@ export const GROUP_POSTS = gql`
       user {
         ...UserFields
       }
-      comments {
-        ...CommentFields
-      }
     }
   }
   ${POST_FIELDS}
   ${USER_FIELDS}
-  ${COMMENT_FIELDS}
 `
 
 export const CREATE_GROUP_POST = gql`
@@ -136,6 +141,32 @@ export const CREATE_GROUP_POST = gql`
     }
   }
   ${POST_FIELDS}
+  ${USER_FIELDS}
+`
+
+export const POST_LIKES = gql`
+  query PostLikes($id: ID!) {
+    postLikes(id: $id) {
+      ...LikeFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${LIKE_FIELDS}
+  ${USER_FIELDS}
+`
+
+export const TOGGLE_POST_LIKE = gql`
+  mutation togglePostLike($id: ID!) {
+    togglePostLike(id: $id) {
+      ...LikeFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${LIKE_FIELDS}
   ${USER_FIELDS}
 `
 
