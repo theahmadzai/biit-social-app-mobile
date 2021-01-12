@@ -31,9 +31,6 @@ const CommentPreview = ({ comment: { content, user, createdAt } }) => {
           {content}
         </Text>
       </Body>
-      {/* <Right>
-        <Text note>{moment(+createdAt).fromNow()}</Text>
-      </Right> */}
     </ListItem>
   )
 }
