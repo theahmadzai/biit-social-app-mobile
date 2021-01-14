@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react'
 import { Alert } from 'react-native'
 import { useMutation } from '@apollo/client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import client from '../client'
 import { LOGIN } from '../graphql'
 
 const initialState = {
@@ -49,6 +50,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await AsyncStorage.removeItem('auth')
     setAuth(initialState)
+    client.resetStore()
   }
 
   return (
