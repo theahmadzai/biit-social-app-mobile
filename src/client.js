@@ -33,6 +33,13 @@ const client = new ApolloClient({
   ),
   cache: new InMemoryCache({
     typePolicies: {
+      User: {
+        fields: {
+          profile: {
+            merge: true,
+          },
+        },
+      },
       Mutation: {
         fields: {
           togglePostLike: {

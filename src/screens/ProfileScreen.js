@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  Alert,
   View,
   StyleSheet,
   Text,
@@ -7,30 +8,83 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
+import { gql, useQuery } from '@apollo/client'
 import { useAuth } from '../contexts/AuthContext'
+import Loading from '../components/Loading'
 import { APP_URL } from '../constants'
-import { profileName } from '../utils'
+import { profileName, profileDescription } from '../utils'
 
 const ProfileScreen = ({ route }) => {
-  const { user: u, logout } = useAuth()
-  let user = u
+  const { user: authUser, logout } = useAuth()
 
-  if (route.params && 'id' in route.params) {
-    Object.assign(user, route.params)
-  }
+  const id = route.params && route.params.id ? route.params.id : authUser.id
+
+  const { data, loading } = useQuery(
+    gql`
+      query GetUserProfile($id: ID!) {
+        user(id: $id) {
+          id
+          username
+          image
+          role
+          profile {
+            firstName
+            middleName
+            lastName
+
+            ... on StudentProfile {
+              session
+              program
+              section
+              semester
+            }
+
+            ... on TeacherProfile {
+              designation
+              status
+              phone
+              email
+            }
+          }
+        }
+      }
+    `,
+    {
+      variables: { id },
+      onError(err) {
+        Alert.alert(err.name, err.message)
+      },
+    }
+  )
+
+  if (loading) return <Loading />
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}></View>
-      <Image style={styles.avatar} source={{ uri: APP_URL + user.image }} />
+      <Image
+        style={styles.avatar}
+        source={{ uri: APP_URL + data.user.image }}
+      />
       <View style={styles.body}>
         <View style={styles.bodyContent}>
-          <Text style={styles.name}>{profileName(user)}</Text>
-          <Text style={styles.info}>BSCS-8B (BATCH: 2017)</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
-            electram expetendis, omittam deseruisse consequuntur ius an,
-          </Text>
+          <Text style={styles.name}>{profileName(data.user)}</Text>
+          <Text>{profileDescription(data.user)}</Text>
+          {data.user.role === 'STUDENT' ? (
+            <>
+              <Text>Session: {data.user.profile.session}</Text>
+              <Text>Program: {data.user.profile.program}</Text>
+              <Text>Semester: {data.user.profile.semester}</Text>
+              <Text>Section: {data.user.profile.section}</Text>
+            </>
+          ) : (
+            <>
+              <Text>Designation: {data.user.profile.designation.trim()}</Text>
+              <Text>Status: {data.user.profile.status.trim()}</Text>
+              <Text>Phone: {data.user.profile.phone.trim()}</Text>
+              <Text>Email: {data.user.profile.email.trim()}</Text>
+            </>
+          )}
           {route.params ? null : (
             <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
               <Text style={styles.buttonText}>Logout</Text>
@@ -72,17 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#393939',
     fontWeight: '600',
-  },
-  info: {
-    fontSize: 16,
-    color: '#00BFFF',
-    marginTop: 10,
-  },
-  description: {
-    fontSize: 16,
-    color: '#696969',
-    marginTop: 10,
-    textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 10,
