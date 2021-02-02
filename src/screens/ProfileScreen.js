@@ -39,7 +39,7 @@ const ProfileScreen = ({ route }) => {
               semester
             }
 
-            ... on TeacherProfile {
+            ... on EmployeeProfile {
               designation
               status
               phone
