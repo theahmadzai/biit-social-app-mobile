@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  Alert,
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native'
+import { Alert, View, StyleSheet, Text, Image, ScrollView } from 'react-native'
 import { gql, useQuery } from '@apollo/client'
 import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
@@ -15,9 +7,9 @@ import { APP_URL } from '../constants'
 import { profileName, profileDescription } from '../utils'
 
 const ProfileScreen = ({ route }) => {
-  const { user: authUser, logout } = useAuth()
+  const { user } = useAuth()
 
-  const id = route.params && route.params.id ? route.params.id : authUser.id
+  const id = route.params && route.params.id ? route.params.id : user.id
 
   const { data, loading } = useQuery(
     gql`
@@ -85,11 +77,6 @@ const ProfileScreen = ({ route }) => {
               <Text>Email: {data.user.profile.email.trim()}</Text>
             </>
           )}
-          {route.params ? null : (
-            <TouchableOpacity style={styles.buttonContainer} onPress={logout}>
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     </ScrollView>
@@ -100,7 +87,7 @@ export default ProfileScreen
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: 'teal',
+    backgroundColor: '#008e50',
     height: 100,
   },
   avatar: {
@@ -123,23 +110,8 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   name: {
-    fontSize: 28,
+    fontSize: 24,
     color: '#393939',
     fontWeight: '600',
-  },
-  buttonContainer: {
-    marginTop: 10,
-    height: 45,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    width: 250,
-    borderRadius: 30,
-    backgroundColor: 'teal',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 })
