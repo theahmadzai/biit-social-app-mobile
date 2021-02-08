@@ -1,25 +1,25 @@
 import React from 'react'
 import { Container, Tabs, Tab } from 'native-base'
-import WallPost from '../components/WallPost'
-import IntelligentWallPost from '../components/IntelligentWallPost'
+import CreateNormalPost from '../components/CreateNormalPost'
+import CreateIntelligentPost from '../components/CreateIntelligentPost'
 
 const CreateWallPostScreen = () => {
   return (
     <Container>
       <Tabs tabBarInactiveTextColor="#fff">
         <Tab
-          activeTabStyle={{ backgroundColor: '#000' }}
-          tabStyle={{ backgroundColor: '#222' }}
+          activeTabStyle={{ backgroundColor: '#009e50' }}
+          tabStyle={{ backgroundColor: '#008e50' }}
           heading="Normal Post"
         >
-          <WallPost />
+          <CreateNormalPost />
         </Tab>
         <Tab
-          activeTabStyle={{ backgroundColor: '#000' }}
-          tabStyle={{ backgroundColor: '#222' }}
+          activeTabStyle={{ backgroundColor: '#009e50' }}
+          tabStyle={{ backgroundColor: '#008e50' }}
           heading="Intelligent Post"
         >
-          <IntelligentWallPost />
+          <CreateIntelligentPost />
         </Tab>
       </Tabs>
     </Container>
