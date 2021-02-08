@@ -27,7 +27,7 @@ const CommentPreview = ({ comment: { content, user, createdAt } }) => {
         <Text
           style={{ fontSize: 14, fontWeight: 'bold' }}
           onPress={() =>
-            navigate('Profile', { screen: 'Profile', params: { id: user.id } })
+            navigate('User', { screen: 'Profile', params: { userId: user.id } })
           }
         >
           {profileName(user)}

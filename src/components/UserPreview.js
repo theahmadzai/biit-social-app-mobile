@@ -12,7 +12,7 @@ const UserPreview = ({ user, right }) => {
       noBorder
       avatar
       onPress={() =>
-        navigate('Profile', { screen: 'Profile', params: { id: user.id } })
+        navigate('User', { screen: 'Profile', params: { userId: user.id } })
       }
     >
       <Left>

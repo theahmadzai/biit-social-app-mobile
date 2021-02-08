@@ -79,9 +79,9 @@ const PostPreview = ({
             <Text
               style={{ fontWeight: 'bold' }}
               onPress={() =>
-                navigate('Profile', {
+                navigate('User', {
                   screen: 'Profile',
-                  params: { id: user.id },
+                  params: { userId: user.id },
                 })
               }
             >

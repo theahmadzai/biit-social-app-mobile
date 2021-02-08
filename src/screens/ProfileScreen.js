@@ -45,7 +45,7 @@ const ProfileScreen = ({ route }) => {
       }
     `,
     {
-      variables: { id: route.params.id },
+      variables: { id: route.params.userId },
     }
   )
 
