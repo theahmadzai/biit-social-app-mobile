@@ -2,8 +2,9 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Feather } from '@expo/vector-icons'
 import HomeStack from './HomeStack'
+import WallStack from './WallStack'
 import GroupsStack from './GroupsStack'
-import ProfileStack from './UserStack'
+import ProfileStack from './ProfileStack'
 import NotificationsStack from './NotificationsStack'
 
 const Tab = createBottomTabNavigator()
@@ -23,6 +24,13 @@ const BottomTabs = () => {
         component={HomeStack}
         options={{
           tabBarIcon: props => <Feather {...props} name="activity" />,
+        }}
+      />
+      <Tab.Screen
+        name="Wall"
+        component={WallStack}
+        options={{
+          tabBarIcon: props => <Feather {...props} name="target" />,
         }}
       />
       <Tab.Screen
