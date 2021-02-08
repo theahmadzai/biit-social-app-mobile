@@ -5,13 +5,15 @@ import { APP_URL } from '../constants'
 import { profileName, profileDescription } from '../utils'
 
 const UserPreview = ({ user, right }) => {
-  const navigation = useNavigation()
+  const { navigate } = useNavigation()
 
   return (
     <ListItem
       noBorder
       avatar
-      onPress={() => navigation.navigate('Profile', user)}
+      onPress={() =>
+        navigate('Profile', { screen: 'Profile', params: { id: user.id } })
+      }
     >
       <Left>
         <Thumbnail small source={{ uri: APP_URL + user.image }} />

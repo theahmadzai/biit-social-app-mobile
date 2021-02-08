@@ -1,10 +1,13 @@
 import React from 'react'
 import { ListItem, Left, Body, Thumbnail, Text } from 'native-base'
+import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import { APP_URL } from '../constants'
 import { profileName } from '../utils'
 
 const CommentPreview = ({ comment: { content, user, createdAt } }) => {
+  const { navigate } = useNavigation()
+
   return (
     <ListItem avatar noBorder>
       <Left>
@@ -21,7 +24,12 @@ const CommentPreview = ({ comment: { content, user, createdAt } }) => {
           borderColor: '#e8e8e8',
         }}
       >
-        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+        <Text
+          style={{ fontSize: 14, fontWeight: 'bold' }}
+          onPress={() =>
+            navigate('Profile', { screen: 'Profile', params: { id: user.id } })
+          }
+        >
           {profileName(user)}
         </Text>
         <Text note style={{ fontSize: 12 }}>

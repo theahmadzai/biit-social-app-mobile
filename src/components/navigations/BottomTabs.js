@@ -4,7 +4,7 @@ import { Feather } from '@expo/vector-icons'
 import HomeStack from './HomeStack'
 import WallStack from './WallStack'
 import GroupsStack from './GroupsStack'
-import ProfileStack from './ProfileStack'
+import UserStack from './UserStack'
 import NotificationsStack from './NotificationsStack'
 
 const Tab = createBottomTabNavigator()
@@ -41,8 +41,8 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Settings"
-        component={ProfileStack}
+        name="User"
+        component={UserStack}
         options={{
           tabBarIcon: props => <Feather {...props} name="settings" />,
         }}

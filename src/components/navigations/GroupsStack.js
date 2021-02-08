@@ -10,7 +10,6 @@ import MembersScreen from '../../screens/Groups/MembersScreen'
 import LikesScreen from '../../screens/Groups/LikesScreen'
 import CommentsScreen from '../../screens/Groups/CommentsScreen'
 import CreateGroupScreen from '../../screens/Groups/CreateGroupScreen'
-import ProfileScreen from '../../screens/ProfileScreen'
 import AddMembersScreen from '../../screens/Groups/AddMembersScreen'
 import { APP_URL } from '../../constants'
 
@@ -30,7 +29,7 @@ const GroupsStack = () => {
         name="Posts"
         component={PostsScreen}
         options={({
-          navigation,
+          navigation: { navigate },
           route: {
             params: { group },
           },
@@ -61,11 +60,11 @@ const GroupsStack = () => {
             >
               <Menu.Item
                 title="Members"
-                onPress={() => navigation.navigate('Members', { group })}
+                onPress={() => navigate('Members', { group })}
               />
               <Menu.Item
                 title="Add members"
-                onPress={() => navigation.navigate('AddMembers', { group })}
+                onPress={() => navigate('AddMembers', { group })}
               />
               <Divider />
               <Menu.Item onPress={() => {}} title="Exit group" />
@@ -90,7 +89,6 @@ const GroupsStack = () => {
           title: 'Create Group',
         }}
       />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
   )
 }

@@ -6,8 +6,8 @@ import TeacherWall from '../components/TeacherWall'
 import { useAuth } from '../contexts/AuthContext'
 
 const HomeScreen = () => {
+  const { navigate } = useNavigation()
   const { user } = useAuth()
-  const navigation = useNavigation()
 
   return (
     <Container>
@@ -16,7 +16,7 @@ const HomeScreen = () => {
         <Fab
           position="bottomRight"
           style={{ backgroundColor: 'white' }}
-          onPress={() => navigation.navigate('CreateWallPost')}
+          onPress={() => navigate('CreateWallPost')}
         >
           <Icon name="md-create" style={{ color: 'black' }} />
         </Fab>

@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native'
 import { APP_URL } from '../constants'
 
 const GroupPreview = ({ group }) => {
-  const navigation = useNavigation()
+  const { navigate } = useNavigation()
 
   return (
-    <ListItem thumbnail onPress={() => navigation.navigate('Posts', { group })}>
+    <ListItem thumbnail onPress={() => navigate('Posts', { group })}>
       <Left avatar>
         <Thumbnail source={{ uri: APP_URL + group.image }} />
       </Left>

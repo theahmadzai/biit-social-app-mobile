@@ -21,8 +21,8 @@ import { useAuth } from '../../contexts/AuthContext'
 import Loading from '../../components/Loading'
 
 const CreateGroupScreen = () => {
+  const { navigate } = useNavigation()
   const { user } = useAuth()
-  const navigation = useNavigation()
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -30,7 +30,7 @@ const CreateGroupScreen = () => {
 
   const [createGroup, { loading: creatingGroup }] = useMutation(CREATE_GROUP, {
     onCompleted() {
-      navigation.navigate('Groups')
+      navigate('Groups', { screen: 'Groups' })
     },
     onError(err) {
       Toast.show({

@@ -9,8 +9,8 @@ import GroupPreview from '../../components/GroupPreview'
 import Loading from '../../components/Loading'
 
 const GroupsScreen = () => {
+  const { navigate } = useNavigation()
   const { user } = useAuth()
-  const navigation = useNavigation()
 
   const { data, loading, error, refetch, networkStatus } = useQuery(
     USER_GROUPS,
@@ -36,7 +36,7 @@ const GroupsScreen = () => {
       <Fab
         position="bottomRight"
         style={{ backgroundColor: 'white' }}
-        onPress={() => navigation.navigate('CreateGroup')}
+        onPress={() => navigate('CreateGroup')}
       >
         <Icon name="add" style={{ color: 'black' }} />
       </Fab>

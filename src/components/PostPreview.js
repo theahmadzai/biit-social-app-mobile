@@ -27,7 +27,7 @@ const IS_POST_LIKED_BY_USER = gql`
 const PostPreview = ({
   post: { id, text, createdAt, media, user, likesCount, commentsCount },
 }) => {
-  const navigation = useNavigation()
+  const { navigate } = useNavigation()
   const [isLiked, setIsLiked] = useState(false)
 
   useQuery(IS_POST_LIKED_BY_USER, {
@@ -78,7 +78,12 @@ const PostPreview = ({
           <Body>
             <Text
               style={{ fontWeight: 'bold' }}
-              onPress={() => navigation.navigate('Profile', user)}
+              onPress={() =>
+                navigate('Profile', {
+                  screen: 'Profile',
+                  params: { id: user.id },
+                })
+              }
             >
               {profileName(user)}
             </Text>
@@ -122,7 +127,7 @@ const PostPreview = ({
           <Button
             transparent
             onPress={likeAction}
-            onLongPress={() => navigation.navigate('Likes', { postId: id })}
+            onLongPress={() => navigate('Likes', { postId: id })}
           >
             {isLiked ? (
               <FontAwesome name="thumbs-o-down" size={30} />
@@ -134,7 +139,7 @@ const PostPreview = ({
         <Right>
           <Button
             transparent
-            onPress={() => navigation.navigate('Comments', { postId: id })}
+            onPress={() => navigate('Comments', { postId: id })}
           >
             <FontAwesome name="comment-o" size={30} />
           </Button>

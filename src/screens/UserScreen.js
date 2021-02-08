@@ -3,11 +3,14 @@ import { Alert, View, StyleSheet, Text, Image, FlatList } from 'react-native'
 import { Container } from 'native-base'
 import { gql, useQuery } from '@apollo/client'
 import GroupPreview from '../components/GroupPreview'
+import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
 import { APP_URL } from '../constants'
 import { profileName, profileDescription } from '../utils'
 
-const ProfileScreen = ({ route }) => {
+const UserScreen = () => {
+  const { user } = useAuth()
+
   const { data, loading, error } = useQuery(
     gql`
       query GetUserProfile($id: ID!) {
@@ -45,7 +48,7 @@ const ProfileScreen = ({ route }) => {
       }
     `,
     {
-      variables: { id: route.params.id },
+      variables: { id: user.id },
     }
   )
 
@@ -95,7 +98,7 @@ const ProfileScreen = ({ route }) => {
   )
 }
 
-export default ProfileScreen
+export default UserScreen
 
 const styles = StyleSheet.create({
   header: {
