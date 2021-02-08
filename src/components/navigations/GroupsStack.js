@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native'
 import { Thumbnail } from 'native-base'
 import { Menu, Divider } from 'react-native-paper'
 import { createStackNavigator } from '@react-navigation/stack'
-import { Fontisto } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import GroupsScreen from '../../screens/Groups/GroupsScreen'
 import PostsScreen from '../../screens/Groups/PostsScreen'
 import MembersScreen from '../../screens/Groups/MembersScreen'
@@ -51,7 +51,11 @@ const GroupsStack = () => {
               onDismiss={closeMenu}
               anchor={
                 <TouchableOpacity onPress={openMenu}>
-                  <Fontisto name="more-v-a" size={18} style={{ padding: 20 }} />
+                  <Feather
+                    name="more-vertical"
+                    size={18}
+                    style={{ padding: 20 }}
+                  />
                 </TouchableOpacity>
               }
             >
