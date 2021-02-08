@@ -14,7 +14,7 @@ import {
 import * as ImagePicker from 'expo-image-picker'
 import mime from 'react-native-mime-types'
 
-const WallPost = () => {
+const CreateNormalPost = () => {
   const [text, setText] = useState('')
   const [files, setFiles] = useState([])
 
@@ -37,7 +37,7 @@ const WallPost = () => {
 
   return (
     <Form style={{ padding: 10 }}>
-      <FlatList
+      {/* <FlatList
         horizontal
         data={files}
         keyExtractor={({ uri }) => uri}
@@ -54,7 +54,7 @@ const WallPost = () => {
             }}
           />
         )}
-      />
+      /> */}
       <Item regular style={{ marginBottom: 10 }}>
         <Input
           placeholder="Write something..."
@@ -125,4 +125,4 @@ const WallPost = () => {
   )
 }
 
-export default WallPost
+export default CreateNormalPost
