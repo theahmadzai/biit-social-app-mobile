@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
+import React from 'react'
+import { TouchableOpacity, View } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { Menu } from 'react-native-paper'
 import { Feather } from '@expo/vector-icons'
 import HomeScreen from '../../screens/HomeScreen'
 import CreateWallPostScreen from '../../screens/CreateWallPostScreen'
@@ -12,46 +11,37 @@ import { useAuth } from '../../contexts/AuthContext'
 const Stack = createStackNavigator()
 
 const HomeStack = () => {
-  const [visible, setVisible] = useState(false)
-
   const { user } = useAuth()
-
-  const openMenu = () => setVisible(true)
-
-  const closeMenu = () => setVisible(false)
 
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={({ navigation }) => ({
-          headerRight: () => {
+        options={({ navigation: { navigate } }) => ({
+          headerRight: () =>
             user.role === 'STUDENT' ? (
-              <Menu
-                visible={visible}
-                onDismiss={closeMenu}
-                anchor={
-                  <TouchableOpacity onPress={openMenu}>
-                    <Feather
-                      name="more-vertical"
-                      size={18}
-                      style={{ padding: 20 }}
-                    />
-                  </TouchableOpacity>
-                }
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}
               >
-                <Menu.Item
-                  title="Datesheet"
-                  onPress={() => navigation.navigate('Datesheet')}
-                />
-                <Menu.Item
-                  title="Timetable"
-                  onPress={() => navigation.navigate('Timetable')}
-                />
-              </Menu>
-            ) : null
-          },
+                <TouchableOpacity
+                  style={{ marginRight: 20 }}
+                  onPress={() => navigate('Datesheet')}
+                >
+                  <Feather name="clipboard" size={18} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ marginRight: 20 }}
+                  onPress={() => navigate('Timetable')}
+                >
+                  <Feather name="calendar" size={18} />
+                </TouchableOpacity>
+              </View>
+            ) : null,
         })}
       />
       <Stack.Screen
