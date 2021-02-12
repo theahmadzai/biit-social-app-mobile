@@ -44,7 +44,7 @@ const BottomTabs = () => {
         name="User"
         component={UserStack}
         options={{
-          tabBarIcon: props => <Feather {...props} name="settings" />,
+          tabBarIcon: props => <Feather {...props} name="user" />,
         }}
       />
       <Tab.Screen
