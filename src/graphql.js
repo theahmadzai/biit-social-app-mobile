@@ -10,6 +10,20 @@ export const USER_FIELDS = gql`
       firstName
       middleName
       lastName
+
+      ... on StudentProfile {
+        session
+        program
+        section
+        semester
+      }
+
+      ... on EmployeeProfile {
+        designation
+        status
+        phone
+        email
+      }
     }
   }
 `
@@ -121,6 +135,19 @@ export const CREATE_GROUP = gql`
 export const GROUP_POSTS = gql`
   query GroupPosts($id: ID!) {
     groupPosts(id: $id) {
+      ...PostFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${POST_FIELDS}
+  ${USER_FIELDS}
+`
+
+export const CLASS_POSTS = gql`
+  query ClassPosts($id: ID!) {
+    classPosts(id: $id) {
       ...PostFields
       user {
         ...UserFields

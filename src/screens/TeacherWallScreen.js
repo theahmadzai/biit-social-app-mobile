@@ -1,12 +1,12 @@
 import React from 'react'
 import { Container, Text } from 'native-base'
 
-const WallScreen = () => {
+const TeacherWallScreen = () => {
   return (
     <Container>
-      <Text>Class Wall</Text>
+      <Text>Teacher Wall</Text>
     </Container>
   )
 }
 
-export default WallScreen
+export default TeacherWallScreen

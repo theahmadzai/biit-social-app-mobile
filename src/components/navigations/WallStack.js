@@ -1,22 +1,33 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import WallScreen from '../../screens/WallScreen'
-// import {useAuth} from '../../contexts/AuthContext'
+import StudentWallScreen from '../../screens/StudentWallScreen'
+import TeacherWallScreen from '../../screens/TeacherWallScreen'
+import { useAuth } from '../../contexts/AuthContext'
 
 const Stack = createStackNavigator()
 
 const WallStack = () => {
-  // const {user} = useAuth()
+  const { user } = useAuth()
 
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Wall"
-        component={WallScreen}
-        options={{
-          title: 'BSCS-8B',
-        }}
-      />
+      {user.role === 'STUDENT' ? (
+        <Stack.Screen
+          name="StudentWall"
+          component={StudentWallScreen}
+          options={{
+            title: `${user.profile.program}-${user.profile.semester}${user.profile.section} (${user.profile.session})`,
+          }}
+        />
+      ) : (
+        <Stack.Screen
+          name="TeacherWall"
+          component={TeacherWallScreen}
+          options={{
+            title: 'Classes',
+          }}
+        />
+      )}
     </Stack.Navigator>
   )
 }

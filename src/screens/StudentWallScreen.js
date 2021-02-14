@@ -13,22 +13,21 @@ import { useQuery, useMutation } from '@apollo/client'
 import * as ImagePicker from 'expo-image-picker'
 import mime from 'react-native-mime-types'
 import { ReactNativeFile } from 'apollo-upload-client'
-import { GROUP_POSTS, CREATE_GROUP_POST } from '../../graphql'
-import { useAuth } from '../../contexts/AuthContext'
-import PostPreview from '../../components/PostPreview'
-import Loading from '../../components/Loading'
-import { APP_URL } from '../../constants'
+import { CLASS_POSTS, CREATE_GROUP_POST } from '../graphql'
+import { useAuth } from '../contexts/AuthContext'
+import PostPreview from '../components/PostPreview'
+import Loading from '../components/Loading'
+import { APP_URL } from '../constants'
 
-const PostsScreen = ({ route }) => {
-  const { id: groupId } = route.params.group
-
+const StudentWallScreen = () => {
+  const groupId = 'BCS-3A'
   const [text, setText] = useState('')
   const [files, setFiles] = useState([])
 
   const { user } = useAuth()
 
   const { data, loading, error, refetch, networkStatus } = useQuery(
-    GROUP_POSTS,
+    CLASS_POSTS,
     { variables: { id: groupId } }
   )
 
@@ -48,15 +47,15 @@ const PostsScreen = ({ route }) => {
       },
       update(cache, { data: { createGroupPost } }) {
         const { groupPosts } = cache.readQuery({
-          query: GROUP_POSTS,
+          query: CLASS_POSTS,
           variables: { id: groupId },
         })
 
         cache.writeQuery({
-          query: GROUP_POSTS,
+          query: CLASS_POSTS,
           variables: { id: groupId },
           data: {
-            groupPosts: [createGroupPost, ...groupPosts],
+            classPosts: [createGroupPost, ...groupPosts],
           },
         })
       },
@@ -136,7 +135,7 @@ const PostsScreen = ({ route }) => {
     <Container>
       <FlatList
         ListHeaderComponent={headerComponent}
-        data={data.groupPosts}
+        data={data.classPosts}
         keyExtractor={({ id }) => id}
         renderItem={({ item }) => <PostPreview post={item} />}
         refreshControl={
@@ -150,4 +149,4 @@ const PostsScreen = ({ route }) => {
   )
 }
 
-export default PostsScreen
+export default StudentWallScreen
