@@ -11,9 +11,7 @@ const UserPreview = ({ user, right }) => {
     <ListItem
       noBorder
       avatar
-      onPress={() =>
-        navigate('User', { screen: 'Profile', params: { userId: user.id } })
-      }
+      onPress={() => navigate('Profile', { userId: user.id })}
     >
       <Left>
         <Thumbnail small source={{ uri: APP_URL + user.image }} />

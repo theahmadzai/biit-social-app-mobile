@@ -24,8 +24,8 @@ const IS_POST_LIKED_BY_USER = gql`
   }
 `
 
-const PostPreview = ({
-  post: { id, text, createdAt, media, user, likesCount, commentsCount },
+const SecretPostPreview = ({
+  post: { id, text, secret, createdAt, media, user, likesCount, commentsCount },
 }) => {
   const { navigate } = useNavigation()
   const [isLiked, setIsLiked] = useState(false)
@@ -52,6 +52,7 @@ const PostPreview = ({
           postLikes: togglePostLike,
         },
       })
+
       cache.writeFragment({
         id: `Post:${id}`,
         fragment: gql`
@@ -74,13 +75,19 @@ const PostPreview = ({
     <Card>
       <CardItem>
         <Left>
-          <Thumbnail source={{ uri: APP_URL + user.image }} />
+          <Thumbnail
+            source={{
+              uri: APP_URL + (secret ? 'fake/anonymous.jpg' : user.image),
+            }}
+          />
           <Body>
             <Text
               style={{ fontWeight: 'bold' }}
-              onPress={() => navigate('Profile', { userId: user.id })}
+              onPress={() =>
+                secret ? null : navigate('Profile', { userId: user.id })
+              }
             >
-              {profileName(user)}
+              {secret ? 'Anonymous' : profileName(user)}
             </Text>
             <Text note>{moment(+createdAt).fromNow()}</Text>
           </Body>
@@ -134,7 +141,7 @@ const PostPreview = ({
         <Right>
           <Button
             transparent
-            onPress={() => navigate('Comments', { postId: id })}
+            onPress={() => navigate('SecretComments', { postId: id })}
           >
             <FontAwesome name="comment-o" size={30} />
           </Button>
@@ -144,4 +151,4 @@ const PostPreview = ({
   )
 }
 
-export default memo(PostPreview)
+export default memo(SecretPostPreview)

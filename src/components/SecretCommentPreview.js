@@ -5,13 +5,20 @@ import moment from 'moment'
 import { APP_URL } from '../constants'
 import { profileName } from '../utils'
 
-const CommentPreview = ({ comment: { content, user, createdAt } }) => {
+const SecretCommentPreview = ({
+  comment: { content, secret, user, createdAt },
+}) => {
   const { navigate } = useNavigation()
 
   return (
     <ListItem avatar noBorder>
       <Left>
-        <Thumbnail small source={{ uri: APP_URL + user.image }} />
+        <Thumbnail
+          small
+          source={{
+            uri: APP_URL + (secret ? 'fake/anonymous.jpg' : user.image),
+          }}
+        />
       </Left>
       <Body
         style={{
@@ -26,9 +33,11 @@ const CommentPreview = ({ comment: { content, user, createdAt } }) => {
       >
         <Text
           style={{ fontSize: 14, fontWeight: 'bold' }}
-          onPress={() => navigate('Profile', { userId: user.id })}
+          onPress={() =>
+            secret ? null : navigate('Profile', { userId: user.id })
+          }
         >
-          {profileName(user)}
+          {secret ? 'Anonymous' : profileName(user)}
         </Text>
         <Text note style={{ fontSize: 12 }}>
           {moment(+createdAt).fromNow()}
@@ -41,4 +50,4 @@ const CommentPreview = ({ comment: { content, user, createdAt } }) => {
   )
 }
 
-export default CommentPreview
+export default SecretCommentPreview

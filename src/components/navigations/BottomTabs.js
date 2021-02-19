@@ -2,9 +2,9 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Feather } from '@expo/vector-icons'
 import HomeStack from './HomeStack'
-import WallStack from './WallStack'
+import ClassStack from './ClassStack'
 import GroupsStack from './GroupsStack'
-import UserStack from './UserStack'
+import ProfileStack from './ProfileStack'
 import NotificationsStack from './NotificationsStack'
 
 const Tab = createBottomTabNavigator()
@@ -27,8 +27,8 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Wall"
-        component={WallStack}
+        name="Class"
+        component={ClassStack}
         options={{
           tabBarIcon: props => <Feather {...props} name="target" />,
         }}
@@ -41,20 +41,20 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="User"
-        component={UserStack}
+        name="Profile"
+        component={ProfileStack}
         options={{
           tabBarIcon: props => <Feather {...props} name="user" />,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Notifications"
         component={NotificationsStack}
         options={{
           tabBarBadge: 2,
           tabBarIcon: props => <Feather {...props} name="bell" />,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }

@@ -4,18 +4,12 @@ import { Container, Fab, Icon } from 'native-base'
 import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import { USER_GROUPS } from '../../graphql'
-import { useAuth } from '../../contexts/AuthContext'
 import GroupPreview from '../../components/GroupPreview'
 import Loading from '../../components/Loading'
 
 const GroupsScreen = () => {
   const { navigate } = useNavigation()
-  const { user } = useAuth()
-
-  const { data, loading, error, refetch, networkStatus } = useQuery(
-    USER_GROUPS,
-    { variables: { id: user.id } }
-  )
+  const { data, loading, error, refetch, networkStatus } = useQuery(USER_GROUPS)
 
   if (loading) return <Loading />
   if (error) Alert.alert(error.name, error.message)
@@ -23,7 +17,7 @@ const GroupsScreen = () => {
   return (
     <Container>
       <FlatList
-        data={data.userGroups}
+        data={data?.userGroups ?? []}
         keyExtractor={({ id }) => id}
         renderItem={({ item }) => <GroupPreview group={item} />}
         refreshControl={

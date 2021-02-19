@@ -1,127 +1,52 @@
 import React, { useState } from 'react'
-import { FlatList, Image } from 'react-native'
-import {
-  Form,
-  Item,
-  Input,
-  Button,
-  Text,
-  Icon,
-  Body,
-  ListItem,
-  CheckBox,
-} from 'native-base'
-import * as ImagePicker from 'expo-image-picker'
-import mime from 'react-native-mime-types'
+import { FlatList } from 'react-native'
+import { Text, Body, ListItem, CheckBox } from 'native-base'
+import CreateWallPostForm from '../components/CreateWallPostForm'
+
+const classes = [
+  'ALL',
+  // 'BSCS-1A',
+  // 'BSCS-1B',
+  // 'BSCS-2A',
+  // 'BSCS-2B',
+  // 'BSCS-3A',
+  // 'BSCS-3B',
+  // 'BSCS-4A',
+  // 'BSCS-4B',
+  // 'BSCS-5A',
+  // 'BSCS-5B',
+  // 'BSCS-6A',
+  // 'BSCS-6B',
+  // 'BSCS-7A',
+  // 'BSCS-7B',
+  // 'BSCS-8A',
+  // 'BSCS-8B',
+]
 
 const CreateNormalPost = () => {
-  const [text, setText] = useState('')
-  const [files, setFiles] = useState([])
+  const [classSelections, setClassSelections] = useState(
+    classes.map(c => [c, false])
+  )
 
-  const pickImageAction = async () => {
-    const { uri, cancelled } = await ImagePicker.launchImageLibraryAsync({
-      mediaType: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!cancelled) {
-      const type = mime.lookup(uri) || 'image'
-      const name = `file-${files.length}.${mime.extension(type)}`
-
-      setFiles([...files, { uri, type, name }])
-    }
+  const selectClass = i => {
+    classSelections[i][1] = !classSelections[i][1]
+    setClassSelections([...classSelections])
   }
 
-  const createWallPostAction = () => {}
-
   return (
-    <Form style={{ padding: 10 }}>
-      {/* <FlatList
-        horizontal
-        data={files}
-        keyExtractor={({ uri }) => uri}
-        renderItem={({ item: { uri } }) => (
-          <Image
-            source={{ uri }}
-            style={{
-              borderWidth: 1,
-              borderColor: '#999999',
-              height: 70,
-              width: 70,
-              marginBottom: 10,
-              marginRight: 10,
-            }}
-          />
-        )}
-      /> */}
-      <Item regular style={{ marginBottom: 10 }}>
-        <Input
-          placeholder="Write something..."
-          value={text}
-          onChangeText={setText}
-        />
-        <Icon name="image" onPress={pickImageAction} />
-        <Icon name="send" onPress={createWallPostAction} />
-      </Item>
-      <ListItem>
-        <CheckBox checked={true} />
-        <Body>
-          <Text>ALL</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={true} />
-        <Body>
-          <Text>BSCS</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={true} />
-        <Body>
-          <Text>BSIT</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={true} />
-        <Body>
-          <Text>BSCS-1</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={false} />
-        <Body>
-          <Text>BSIT-1</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={false} />
-        <Body>
-          <Text>BSCS-2</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={false} />
-        <Body>
-          <Text>BSIT-2</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={false} />
-        <Body>
-          <Text>BSCS-3</Text>
-        </Body>
-      </ListItem>
-      <ListItem>
-        <CheckBox checked={false} />
-        <Body>
-          <Text>BSIT-3</Text>
-        </Body>
-      </ListItem>
-      <Button dark onPress={createWallPostAction}>
-        <Text>Create Post</Text>
-      </Button>
-    </Form>
+    <FlatList
+      ListHeaderComponent={<CreateWallPostForm />}
+      data={classSelections}
+      keyExtractor={([c]) => c}
+      renderItem={({ item: [c, isChecked], index }) => (
+        <ListItem onPress={() => selectClass(index)}>
+          <CheckBox checked={true} />
+          <Body>
+            <Text>{c.toUpperCase()}</Text>
+          </Body>
+        </ListItem>
+      )}
+    />
   )
 }
 

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Alert, RefreshControl, FlatList } from 'react-native'
 import { Container, Badge, Text } from 'native-base'
 import { useQuery } from '@apollo/client'
-import CreateUserClassPostForm from '../components/CreateUserClassPostForm'
-import { USER_CLASS_POSTS } from '../graphql'
+import CreateClassPostForm from '../components/CreateClassPostForm'
+import { CLASS_POSTS } from '../graphql'
 import SecretPostPreview from '../components/SecretPostPreview'
 import Loading from '../components/Loading'
 
@@ -31,18 +31,20 @@ const retUnique = (arr = []) => {
   return list
 }
 
-const StudentWallScreen = () => {
+const ClassScreen = ({ route }) => {
+  const classId = route.params.classId
   const [tags, setTags] = useState(['#All'])
   const [tag, setTag] = useState('#All')
   const [filteredPosts, setFilteredPosts] = useState([])
   const [allPosts, setAllPosts] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const { error, refetch, networkStatus } = useQuery(USER_CLASS_POSTS, {
+  const { error, refetch, networkStatus } = useQuery(CLASS_POSTS, {
+    variables: { id: classId },
     onCompleted(data) {
-      setAllPosts(data.userClassPosts)
-      setFilteredPosts(data.userClassPosts)
-      setTags(retUnique(['#All', ...getTags(data.userClassPosts)]))
+      setAllPosts(data.classPosts)
+      setFilteredPosts(data.classPosts)
+      setTags(retUnique(['#All', ...getTags(data.classPosts)]))
       setLoading(false)
     },
   })
@@ -83,7 +85,10 @@ const StudentWallScreen = () => {
       <FlatList
         ListHeaderComponent={
           <>
-            <CreateUserClassPostForm addNewPostAndTag={addNewPostAndTag} />
+            <CreateClassPostForm
+              addNewPostAndTag={addNewPostAndTag}
+              classId={classId}
+            />
             <FlatList
               style={{ padding: 10 }}
               horizontal
@@ -111,4 +116,4 @@ const StudentWallScreen = () => {
   )
 }
 
-export default StudentWallScreen
+export default ClassScreen

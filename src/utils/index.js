@@ -33,3 +33,24 @@ export const profileDescription = ({ role, username }) => {
 
   return ''
 }
+
+export const semesterYearToSemester = semesterYear => {
+  if (Number.isInteger(semesterYear)) {
+    return semesterYear
+  }
+
+  const year = semesterYear.substring(0, 4)
+  const type = semesterYear.substring(4, 5)
+
+  let semester = (new Date().getFullYear() - year) * 2 - 1
+
+  if (type.toLowerCase() === 's') {
+    semester += 1
+  }
+
+  if (semester > 8) {
+    semester = 'GRADUATED'
+  }
+
+  return semester
+}

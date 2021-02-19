@@ -1,13 +1,15 @@
 import React from 'react'
-import { Alert, View, StyleSheet, Text, Image, FlatList } from 'react-native'
-import { Container } from 'native-base'
+import { Alert, View, StyleSheet, Text, Image } from 'react-native'
+import { Container, ListItem, Left, Right, Icon } from 'native-base'
 import { gql, useQuery } from '@apollo/client'
-import GroupPreview from '../components/GroupPreview'
+import { useAuth } from '../contexts/AuthContext'
 import Loading from '../components/Loading'
 import { APP_URL } from '../constants'
 import { profileName, profileDescription } from '../utils'
 
 const ProfileScreen = ({ route }) => {
+  const { user } = useAuth()
+
   const { data, loading, error } = useQuery(
     gql`
       query GetUserProfile($id: ID!) {
@@ -45,7 +47,7 @@ const ProfileScreen = ({ route }) => {
       }
     `,
     {
-      variables: { id: route.params.userId },
+      variables: { id: route?.params?.userId ?? user.id },
     }
   )
 
@@ -54,43 +56,98 @@ const ProfileScreen = ({ route }) => {
 
   return (
     <Container>
-      <FlatList
-        ListHeaderComponent={
-          <>
-            <View style={styles.header}></View>
-            <Image
-              style={styles.avatar}
-              source={{ uri: APP_URL + data.user.image }}
-            />
-            <View style={styles.body}>
-              <View style={styles.bodyContent}>
-                <Text style={styles.name}>{profileName(data.user)}</Text>
-                <Text>{profileDescription(data.user)}</Text>
-                {data.user.role === 'STUDENT' ? (
-                  <>
-                    <Text>Session: {data.user.profile.session}</Text>
-                    <Text>Program: {data.user.profile.program}</Text>
-                    <Text>Semester: {data.user.profile.semester}</Text>
-                    <Text>Section: {data.user.profile.section}</Text>
-                  </>
-                ) : (
-                  <>
-                    <Text>
-                      Designation: {data.user.profile.designation.trim()}
-                    </Text>
-                    <Text>Status: {data.user.profile.status.trim()}</Text>
-                    <Text>Phone: {data.user.profile.phone.trim()}</Text>
-                    <Text>Email: {data.user.profile.email.trim()}</Text>
-                  </>
-                )}
-              </View>
-            </View>
-          </>
-        }
-        data={data.user.groups}
-        keyExtractor={({ id }) => id}
-        renderItem={({ item }) => <GroupPreview group={item} />}
+      <View style={styles.header}></View>
+      <Image
+        style={styles.avatar}
+        source={{ uri: APP_URL + data.user.image }}
       />
+
+      <View style={styles.body}>
+        <View style={styles.bodyContent}>
+          <Text style={styles.name}>{profileName(data.user)}</Text>
+          <Text>{profileDescription(data.user)}</Text>
+        </View>
+
+        {data.user.role === 'STUDENT' ? (
+          <>
+            <ListItem>
+              <Left>
+                <Text>Session:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.session}</Text>
+              </Right>
+            </ListItem>
+            <ListItem>
+              <Left>
+                <Text>Semester:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.semester}</Text>
+              </Right>
+            </ListItem>
+            <ListItem>
+              <Left>
+                <Text>Program:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.program}</Text>
+              </Right>
+            </ListItem>
+            <ListItem>
+              <Left>
+                <Text>Section:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.section}</Text>
+              </Right>
+            </ListItem>
+          </>
+        ) : (
+          <>
+            <ListItem>
+              <Left>
+                <Text>Designation:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.designation.trim()}</Text>
+              </Right>
+            </ListItem>
+            <ListItem>
+              <Left>
+                <Text>Status:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.status.trim()}</Text>
+              </Right>
+            </ListItem>
+            <ListItem>
+              <Left>
+                <Text>Phone:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.phone.trim()}</Text>
+              </Right>
+            </ListItem>
+            <ListItem>
+              <Left>
+                <Text>Email:</Text>
+              </Left>
+              <Right>
+                <Text>{data.user.profile.email.trim()}</Text>
+              </Right>
+            </ListItem>
+          </>
+        )}
+        <ListItem noBorder>
+          <Left>
+            <Text>Groups joined:</Text>
+          </Left>
+          <Right>
+            <Text>{data?.user?.groups?.length ?? 0}</Text>
+          </Right>
+        </ListItem>
+      </View>
     </Container>
   )
 }
@@ -120,6 +177,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 30,
+    marginBottom: 20,
   },
   name: {
     fontSize: 24,

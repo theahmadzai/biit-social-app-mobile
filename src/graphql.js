@@ -41,6 +41,8 @@ export const POST_FIELDS = gql`
   fragment PostFields on Post {
     id
     text
+    secret
+    tags
     createdAt
     media {
       id
@@ -62,6 +64,7 @@ export const COMMENT_FIELDS = gql`
   fragment CommentFields on Comment {
     id
     content
+    secret
     createdAt
   }
 `
@@ -105,6 +108,15 @@ export const REMOVE_GROUP_USER = gql`
   ${USER_FIELDS}
 `
 
+export const EXIT_GROUP = gql`
+  mutation ExitGroup($id: ID!) {
+    exitGroup(id: $id) {
+      ...GroupFields
+    }
+  }
+  ${GROUP_FIELDS}
+`
+
 export const SEARCH_USERS = gql`
   query SearchUsers($input: SearchUsersInput!) {
     searchUsers(input: $input) {
@@ -115,12 +127,38 @@ export const SEARCH_USERS = gql`
 `
 
 export const USER_GROUPS = gql`
-  query UserGroups($id: ID!) {
-    userGroups(id: $id) {
+  query UserGroups {
+    userGroups {
       ...GroupFields
     }
   }
   ${GROUP_FIELDS}
+`
+
+export const USER_CLASS_POSTS = gql`
+  query UserClassPosts {
+    userClassPosts {
+      ...PostFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${POST_FIELDS}
+  ${USER_FIELDS}
+`
+
+export const CREATE_CLASS_POST = gql`
+  mutation CreateClassPost($input: ClassPostInput!) {
+    createClassPost(input: $input) {
+      ...PostFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${POST_FIELDS}
+  ${USER_FIELDS}
 `
 
 export const CREATE_GROUP = gql`
@@ -148,6 +186,31 @@ export const GROUP_POSTS = gql`
 export const CLASS_POSTS = gql`
   query ClassPosts($id: ID!) {
     classPosts(id: $id) {
+      ...PostFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${POST_FIELDS}
+  ${USER_FIELDS}
+`
+
+export const WALL_POSTS = gql`
+  query wallPosts {
+    wallPosts {
+      ...PostFields
+      user {
+        ...UserFields
+      }
+    }
+  }
+  ${POST_FIELDS}
+  ${USER_FIELDS}
+`
+export const CREATE_WALL_POST = gql`
+  mutation CreateWallPost($input: WallPostInput!) {
+    createWallPost(input: $input) {
       ...PostFields
       user {
         ...UserFields
@@ -221,4 +284,15 @@ export const CREATE_POST_COMMENT = gql`
   }
   ${COMMENT_FIELDS}
   ${USER_FIELDS}
+`
+
+export const TEACHER_CLASSES = gql`
+  query TeacherClasses {
+    teacherClasses {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+  }
 `

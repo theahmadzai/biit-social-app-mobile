@@ -1,17 +1,35 @@
 import React from 'react'
+import { Alert, FlatList, RefreshControl } from 'react-native'
 import { Container, Icon, Fab } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
-import StudentWall from '../components/StudentWall'
-import TeacherWall from '../components/TeacherWall'
 import { useAuth } from '../contexts/AuthContext'
+import { useQuery } from '@apollo/client'
+import { WALL_POSTS } from '../graphql'
+import PostPreview from '../components/PostPreview'
+import Loading from '../components/Loading'
 
 const HomeScreen = () => {
   const { navigate } = useNavigation()
   const { user } = useAuth()
 
+  const { data, loading, error, refetch, networkStatus } = useQuery(WALL_POSTS)
+
+  if (loading) return <Loading />
+  if (error) Alert.alert(error.name, error.message)
+
   return (
     <Container>
-      {user.role === 'STUDENT' ? <StudentWall /> : <TeacherWall />}
+      <FlatList
+        data={data?.wallPosts ?? []}
+        keyExtractor={({ id }) => id}
+        renderItem={({ item }) => <PostPreview post={item} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={refetch}
+            refreshing={networkStatus === 4}
+          />
+        }
+      />
       {user.role === 'ADMIN' ? (
         <Fab
           position="bottomRight"

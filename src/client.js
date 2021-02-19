@@ -49,6 +49,9 @@ const client = new ApolloClient({
       },
       Query: {
         fields: {
+          userGroups: {
+            merge: false,
+          },
           groupPosts: {
             merge: false,
           },

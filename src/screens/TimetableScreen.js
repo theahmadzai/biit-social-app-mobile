@@ -40,11 +40,11 @@ const Timetable = () => {
                 <Text>{item.day}</Text>
               </Body>
             </CardItem>
-            <CardItem>
+            {/* <CardItem>
               <Body>
                 <Text>{item.class}</Text>
               </Body>
-            </CardItem>
+            </CardItem> */}
             <CardItem>
               <Body>
                 <Text>{item.course}</Text>
